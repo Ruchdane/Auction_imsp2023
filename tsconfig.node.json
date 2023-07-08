@@ -6,5 +6,10 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
   },
+  "paths": {
+    "@/ui/*": ["./ui/*"],
+    "@/utils/*": ["./utils/*"],
+    "@/*": ["./src/*"]
+  },
   "include": ["vite.config.ts"]
 }
