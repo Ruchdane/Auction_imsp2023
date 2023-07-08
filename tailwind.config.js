@@ -1,6 +1,4 @@
-import { sky,slate, gray, white, black, red } from "tailwindcss/colors";
 import themeSwapper from "tailwindcss-theme-swapper";
-
 const lightTheme = {
   colors: {
     primary: "hsla(222.2,47.4%,11.2%,1)", // sky-900

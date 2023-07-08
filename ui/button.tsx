@@ -2,7 +2,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/utils";
+import { cn } from "../utils";
 import { Loader } from "lucide-react";
 
 const buttonVariants = cva(
@@ -10,14 +10,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "text-secondary bg-primary ",
-        secondary:
-          "text-primary bg-secondary border-solid border-black ",
+        primary: "text-secondary bg-primary",
+        secondary: "text-primary bg-secondary border-solid border-black",
         accent:
-          "text-secondary bg-accent hover:bg-accent/50 border-solid border-black ",
-        icon: "hover:text-primary hover:bg-accent ",
-        ghost: "hover:bg-accent hover:text-accent",
-        link: "underline-offset-4 hover:underline text-primary",
+          "text-accent bg-accent hover:bg-accent/50 border-solid border-black",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 py-2 px-4",
@@ -29,7 +27,7 @@ const buttonVariants = cva(
       variant: "primary",
       size: "default",
     },
-  }
+  },
 );
 
 export interface ButtonProps
@@ -58,7 +56,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       />
     );
-  }
+  },
 );
 Button.displayName = "Button";
 

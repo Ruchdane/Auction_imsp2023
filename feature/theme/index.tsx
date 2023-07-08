@@ -1,31 +1,14 @@
 "use client";
-import { Sun, Moon, Monitor } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
-import { ThemeContext, Theme } from "./context";
+import { ThemeContext } from "./context";
 import { useContext, useMemo } from "react";
 import { Button } from "@/ui/button";
-const themes = [
-  {
-    icon: <Sun />,
-    theme: Theme.Light,
-    name: "Light",
-  },
-  {
-    icon: <Moon />,
-    theme: Theme.Dark,
-    name: "Dark",
-  },
-  {
-    icon: <Monitor />,
-    theme: Theme.System,
-    name: "System",
-  },
-];
+import { themes } from "./themes";
 export function ThemeSwitcher({ className }: { className?: string }) {
   const { state, toggleTheme } = useContext(ThemeContext);
   const currtheme = useMemo(() => {
-    return themes.find((theme) => theme.theme === state.theme);
-  }, [state.theme]);
+    return themes.find((theme) => theme.className === state.className);
+  }, [state.className]);
   return (
     <Popover>
       <PopoverTrigger className={className}>{currtheme?.icon}</PopoverTrigger>
@@ -36,8 +19,8 @@ export function ThemeSwitcher({ className }: { className?: string }) {
               asChild
               key={theme.name}
               disabled={currtheme?.theme === theme.theme}
-              onClick={() => toggleTheme(theme.theme)}
-              className="flex justify-between gap-1"
+              onClick={() => toggleTheme(theme.className)}
+              className="flex justify-between gap-1 bg-main"
             >
               <li>
                 {theme.icon} <span> {theme.name}</span>

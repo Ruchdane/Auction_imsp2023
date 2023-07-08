@@ -1,26 +1,21 @@
 "use client";
 import React, { createContext, useReducer, useEffect, ReactNode } from "react";
+import { themes } from "./themes";
 
-// Define the theme enum
-export enum Theme {
-  Light = "light",
-  Dark = "dark",
-  System = "system",
-}
 
 // Define the initial state for the theme
 interface State {
-  theme: Theme;
+  className: string;
 }
 
 // Define the available actions
-type Action = { type: "SET_THEME"; payload: Theme };
+type Action = { type: "SET_THEME"; payload: string };
 
 // Create the theme reducer
 const themeReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "SET_THEME":
-      return { ...state, theme: action.payload };
+      return { ...state, className: action.payload };
     default:
       return state;
   }
@@ -29,10 +24,10 @@ const themeReducer = (state: State, action: Action): State => {
 // Create the theme context
 export const ThemeContext = createContext<{
   state: State;
-  toggleTheme: (theme: Theme) => void;
+  toggleTheme: (className: string) => void;
 }>({
-  state: { theme: Theme.Light }, // Default theme
-  toggleTheme: () => {},
+  state: { className: themes[0].className }, // Default theme
+  toggleTheme: () => { },
 });
 
 interface ThemeProviderProps {
@@ -40,26 +35,26 @@ interface ThemeProviderProps {
 }
 // Create the theme provider component
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [state, dispatch] = useReducer(themeReducer, { theme: Theme.Light });
+  const [state, dispatch] = useReducer(themeReducer, { className: themes[0].className });
 
   useEffect(() => {
     // Retrieve the theme from localStorage if it exists
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme && Object.values(Theme).includes(savedTheme as Theme)) {
-      dispatch({ type: "SET_THEME", payload: savedTheme as Theme });
-      document.body.className = themeClassName(state.theme);
+    const savedThemeClassName = localStorage.getItem("theme_class_name");
+    if (savedThemeClassName) {
+      dispatch({ type: "SET_THEME", payload: savedThemeClassName });
+      document.body.className = savedThemeClassName;
     }
   }, []);
 
   useEffect(() => {
     // Save the theme to localStorage whenever it changes
-    localStorage.setItem("theme", state.theme);
-    document.body.className = themeClassName(state.theme);
-  }, [state.theme]);
+    localStorage.setItem("theme_class_name", state.className);
+    document.body.className = state.className;
+  }, [state.className]);
 
   // Function to toggle the theme
-  const toggleTheme = (theme: Theme) => {
-    dispatch({ type: "SET_THEME", payload: theme });
+  const toggleTheme = (className: string) => {
+    dispatch({ type: "SET_THEME", payload: className });
   };
 
   // Provide the theme state and toggle function to the children components
@@ -70,15 +65,5 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   );
 };
 
-export function themeClassName(theme: Theme): "light" | "dark" | "" {
-  switch (theme) {
-    case Theme.Light:
-      return "light";
-    case Theme.Dark:
-      return "dark";
-    case Theme.System:
-      return "";
-  }
-}
 
 export default ThemeProvider;
