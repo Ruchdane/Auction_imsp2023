@@ -1,80 +1,160 @@
 import themeSwapper from "tailwindcss-theme-swapper";
+import { orange,green, yellow, sky, slate, gray, white, black, red, purple } from "tailwindcss/colors";
 const lightTheme = {
-  colors: {
-    primary: "hsla(222.2,47.4%,11.2%,1)", // sky-900
-    secondary: "hsla(210,40%,96.1%,1)", // sky-100
-    accent: slate[300], // sky-100
-    destructive: red[400], // red-600
-    border: "hsla(214.3,31.8%,91.4%,1)", // sky-200
-    input: sky[300], // sky-200
-    ring: "hsla(215,20.2%,65.1%,1)", // sky-400
-    shadow: gray[300]
-  },
   backgroundColor: {
-    primary: "hsla(210,40%,96.1%,1)", // sky-100
-    main: "hsla(210,40%,96.1%,1)", // sky-100
-    secondary: "hsla(0,0%,100%,1)", // white
-    tertiary: "hsla(0,0%,100%,1)", // white
-    muted: "hsla(210,40%,96.1%,1)", // sky-100
-    contrast: black,
+    main: green[500],
+    primary: yellow[200],
+    secondary: yellow[400],
+    accent: green[600],
+    muted: yellow[200],
+    contrast: red[900],
+    input: yellow[400],
   },
   textColor: {
-    main: "hsla(222.2,47.4%,11.2%,1)", // sky-500 (text-muted)
-    secondary: "hsla(222.2,47.4%,11.2%,1)", // sky-900 (text-popover and text-card)
-    accent: "hsla(222.2,47.4%,11.2%,1)", // sky-900 (text-popover and text-card)
-    tertiary: "hsla(210,40%,98%,1)", // sky-50 (text-primary)
-    muted: "hsla(222.2,47.4%,11.2%,1)", // sky-900 (text-accent)
-    contrast: white,
+    tooltip: black,
+    main: green[700],
+    primary: green[500],
+    secondary: red[900],
+    accent: red[900],
+    tertiary: yellow[50],
+    muted: red[900],
+    contrast: yellow[200],
   },
   borderColor: {
-    tab: gray[300],
-    active: gray[700],
-    inactive: gray[50],
+    main: green[500],
+    tab: green[500],
+    active: red[700],
+    inactive: yellow[200],
+  },
+  ringColor: {
+    DEFAULT: green[400],
+  },
+  boxShadowColor:{
+    DEFAULT: orange[700]
   },
 };
 
 const darkTheme = {
-  colors: {
-    primary: "hsla(213,31%,91%,1)", // slate-200
-    secondary: "hsla(210,40%,96.1%,1)", // sky-100
-    accent: "hsla(216,34%,17%,1)", // slate-800
-    destructive: red[900], // Custom dark destructive color
-    border: slate[800], // slate-800
-    input: "hsla(216,34%,17%,1)", // slate-800
-    ring: "hsla(216,34%,17%,1)", // slate-800
-    shadow: gray[700]
-  },
   backgroundColor: {
-    primary: "hsla(224,71%,4%,1)", // black (background)
-    main: "hsla(224,71%,4%,1)", // black (background)
-    secondary: "hsla(223,47%,11%,1)", // slate-800 (bg-muted)
-    tertiary: "hsla(224,71%,4%,1)", // black (bg-popover and bg-card)
-    muted: "hsla(216,34%,17%,1)", // slate-800 (border and input)
-    contrast: white,
+    main: red[900],
+    primary: red[900],
+    secondary: green[600],
+    accent: yellow[200],
+    muted: green[600],
+    contrast: yellow[200],
+    input: green[600],
   },
   textColor: {
-    main: "hsla(213,31%,91%,1)", // slate-400 (text-muted)
-    secondary: "hsla(210,40%,98%,1)", // slate-50 (text-secondary)
-    accent: "hsla(210,40%,98%,1)", // slate-50 (text-secondary)
-    tertiary: "hsla(222.2,47.4%,1.2%,1)", // black (text-primary)
-    muted: "hsla(210,40%,98%,1)", // slate-50 (text-accent)
-    contrast: black,
+    tooltip: black,
+    
+    main: red[900],
+    primary: yellow[400],
+    secondary: yellow[200],
+    accent: yellow[200],
+    tertiary: red[900],
+    muted: yellow[200],
+    contrast: red[900],
+  },
+  boxShadowColor:{
+    DEFAULT: orange[300]
   },
   borderColor: {
-    tab: gray[600],
-    active: gray[100],
-    inactive: white,
-  }
+    main: red[900],
+    tab: yellow[400],
+    active: yellow[200],
+    inactive: red[900],
+  },
+  ringColor: {
+    DEFAULT: yellow[400],
+  },
+};
+const africanTheme = {
+  backgroundColor: {
+    main: "#2E7D32",      // Dark green
+    primary: "#FDD835",   // Yellow
+    secondary: "#FFA000", // Orange
+    accent: "#FF5722",    // Deep orange
+    muted: "#9E9E9E",     // Gray
+    contrast: "#000000",  // Black
+    input: "#FFFFFF",     // White
+  },
+  textColor: {
+    tooltip: black,
+    
+    main: "#FFFFFF",      // White
+    primary: "#FDD835",   // Yellow
+    secondary: "#FFA000", // Orange
+    accent: "#FFA000",    // Orange
+    tertiary: "#000000",  // Black
+    muted: "#FDD835",     // Yellow
+    contrast: "#FFFFFF",  // White
+  },
+  borderColor: {
+    main: "#2E7D32",      // Dark green
+    tab: "#FDD835",       // Yellow
+    active: "#FFA000",    // Orange
+    inactive: "#000000",  // Black
+  },
+  ringColor: {
+    DEFAULT: "#FDD835",   // Yellow
+  },
+  boxShadowColor: {
+    DEFAULT: "#FF5722",   // Deep orange
+  },
+};
+
+const beninTheme = {
+  backgroundColor: {
+    main: "#FCD116",      // Yellow
+    primary: "#CE1126",   // Red
+    secondary: "#009E60", // Green
+    accent: "#CE1126",    // Red
+    muted: "#CCCCCC",     // Light gray
+    contrast: "#000000",  // Black
+    input: "#FFFFFF",     // White
+  },
+  textColor: {
+    tooltip: black,
+    
+    main: "#000000",      // Black
+    primary: "#CE1126",   // Red
+    secondary: "#009E60", // Green
+    accent: "#009E60",    // Green
+    tertiary: "#FFFFFF",  // White
+    muted: "#CE1126",     // Red
+    contrast: "#000000",  // Black
+  },
+  borderColor: {
+    main: "#CE1126",      // Red
+    tab: "#CE1126",       // Red
+    active: "#009E60",    // Green
+    inactive: "#000000",  // Black
+  },
+  ringColor: {
+    DEFAULT: "#FCD116",   // Yellow
+  },
+  boxShadowColor: {
+    DEFAULT: "#CE1126",   // Red
+  },
 };
 
 /** @type {import('tailwindcss').Config} */
 export const darkMode = "class";
-export const content = ["./index.html", "./ui/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"];
+export const content = [
+  "./index.html",
+  "./ui/**/*.{ts,tsx}",
+  "./feature/**/*.{ts,tsx}",
+  "./layout/**/*.{ts,tsx}",
+  "./demo/**/*.{ts,tsx}",
+  "./form/**/*.{ts,tsx}",
+  "./src/**/*.{ts,tsx}",
+];
 export const theme = {
   extend: {
     backgroundImage: {
       "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-      "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      "gradient-conic":
+        "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
     },
     animation: {
       "spin-slow": "spin 3s linear infinite",
@@ -91,6 +171,16 @@ export const plugins = [
         selectors: [".light"],
         mediaQuery: "@media (prefers-color-scheme: light)",
         theme: lightTheme,
+      },
+      {
+        name: "african",
+        selectors: [".african"],
+        theme: africanTheme,
+      },
+      {
+        name: "benin",
+        selectors: [".benin"],
+        theme: beninTheme,
       },
       {
         name: "dark",

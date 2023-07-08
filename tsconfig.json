@@ -21,12 +21,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "baseUrl": "./",
-  "paths": {
-    "@/ui/*": ["ui/*"],
-    "@/utils/*": ["utils/*"],
-    "@/feature/*": ["feature/*"],
-    "@/layout/*": ["layout/*"],
-    "@/*": ["src/*"]
-  },
   "references": [{ "path": "./tsconfig.node.json" }]
 }
