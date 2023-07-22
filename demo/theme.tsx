@@ -12,21 +12,39 @@ function ThemeDemo() {
       <h2 className="text-3xl font-bold">Theme Démo!</h2>
       <div className="flex items-center gap-8">
         <div className="flex flex-col gap-8">
-          <Button variant="ghost" onClick={decrement}>i--</Button>
-          <Button variant="link" onClick={decrement}>i--</Button>
-          <Button variant="primary" isLoading onClick={increment}> i++ </Button>
+          <Button variant="ghost" onClick={decrement}>
+            i--
+          </Button>
+          <Button variant="link" onClick={decrement}>
+            i--
+          </Button>
+          <Button variant="primary" isLoading onClick={increment}>
+            {" "}
+            i++{" "}
+          </Button>
         </div>
         <p className="bg-secondary text-center shadow shadow-md ring rounded-lg px-8 py-16">
           <Label className="text-main">The current count is</Label>
-          {"  "}<br />
+          {"  "}
+          <br />
           <strong className="text-center bold text-xl">{count}</strong>
-          {"  "}<br />
+          {"  "}
+          <br />
           <Label className="text-muted">This is disabled</Label>
         </p>
         <div className="flex flex-col gap-8">
-          <Button variant="primary" onClick={increment}> i++ </Button>
-          <Button variant="secondary" onClick={increment}> i++ </Button>
-          <Button variant="accent" onClick={increment}> i++ </Button>
+          <Button variant="primary" onClick={increment}>
+            {" "}
+            i++{" "}
+          </Button>
+          <Button variant="secondary" onClick={increment}>
+            {" "}
+            i++{" "}
+          </Button>
+          <Button variant="accent" onClick={increment}>
+            {" "}
+            i++{" "}
+          </Button>
         </div>
       </div>
     </div>

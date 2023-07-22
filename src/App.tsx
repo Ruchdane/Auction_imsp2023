@@ -4,7 +4,6 @@ import ThemeDemo from "../demo/theme";
 import FormDemo from "../demo/form";
 
 function App() {
-
   return (
     <Root>
       <ThemeDemo />
