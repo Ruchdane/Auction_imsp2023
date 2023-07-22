@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import { ComboBox } from "../ui/combobox";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 
 function CreateAuction() {

@@ -5,6 +5,7 @@ import FormDemo from "../demo/form";
 import MakeBid from "../form/makebid";
 import CreateItem from "../form/createitem";
 import CreateAuction from "../form/createauction";
+import Login from "../form/login";
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
       <MakeBid/> 
       <CreateItem/>
       <CreateAuction/>
+      <Login/>
     </Root>
   );
 }
