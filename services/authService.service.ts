@@ -1,18 +1,20 @@
 
 import AuthFirebase from "@/firebase/auth"
+import { RegisterDto } from "@/dto/register.dto";
+import { LoginDto } from "@/dto/login.dto";
 class AuthService {
-  async signup(email: string, password: string) {
+  async signup(dto: RegisterDto) {
     try {
-      return await AuthFirebase.createUserWithEmailAndPassword(email,password);
+      return await AuthFirebase.createUserWithEmailAndPassword(dto.email,dto.password);
     } catch (error) {
       console.log('Erreur d\'inscription:', error);
       throw error;
     }
   }
 
-  async login(email: string, password: string) {
+  async login(dto: LoginDto) {
     try {
-      return await AuthFirebase.signInWithEmailAndPassword(email, password);
+      return await AuthFirebase.signInWithEmailAndPassword(dto.email, dto.password);
     } catch (error) {
       console.log('Erreur de connexion:', error);
       throw error;
