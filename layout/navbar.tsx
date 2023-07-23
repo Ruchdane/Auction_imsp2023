@@ -7,9 +7,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 export function Navbar() {
   return (
-    <Navigation className="w-full flex justify-between items-center list-none px-16 py-4">
-      <NavigationItem href="/" label={<label className="cursor-pointer font-lg">Auction System</label>} />
-      <NavigationItemSection label={<Profile />} >
+    <Navigation className="w-full flex justify-between items-center list-none px-8 py-2">
+      <NavigationItem
+        href="/"
+        label={<label className="cursor-pointer font-lg">Auction System</label>}
+      />
+      <NavigationItemSection label={<Profile />}>
         <NavigationItem
           href="/logOut"
           label={
@@ -20,7 +23,7 @@ export function Navbar() {
           }
         />
       </NavigationItemSection>
-    </Navigation >
+    </Navigation>
   );
 }
 function useUser() {

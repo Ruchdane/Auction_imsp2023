@@ -31,10 +31,13 @@ export function Sidebar() {
       <NavigationSection className="flex flex-col">
         {links.map((link, key) => (
           <NavigationItem
-            className={
-              cn("px-4 py-6 cursor-pointer w-full",
-                isActive(link.href) && "bg-primary hover:bg-muted")}
-            key={key} {...link} />
+            className={cn(
+              "px-4 py-6 cursor-pointer w-full",
+              isActive(link.href) && "bg-primary hover:bg-muted",
+            )}
+            key={key}
+            {...link}
+          />
         ))}
       </NavigationSection>
     </Navigation>

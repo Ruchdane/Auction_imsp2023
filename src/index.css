@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lobster&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lobster&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -34,10 +34,13 @@
 body {
   color: rgb(var(--foreground-rgb));
   height: 100vh;
-  font-family: 'Lobster', cursive;
-  background: linear-gradient(to bottom,
+  font-family: "Lobster", cursive;
+  background: linear-gradient(
+      to bottom,
       transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
 }
 
 h1,
@@ -45,5 +48,5 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }

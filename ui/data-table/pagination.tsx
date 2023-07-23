@@ -6,14 +6,14 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
-import { Button } from "@/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/ui/select";
+} from "../select";
+import { Button } from "../button";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -55,7 +55,7 @@ export function DataTablePagination<TData>({
         </div>
         <div className="flex flex-wrap items-center space-x-2">
           <Button
-            variant="icon"
+            variant="ghost"
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
@@ -64,7 +64,7 @@ export function DataTablePagination<TData>({
             <ChevronsLeft className="h-4 w-4" />
           </Button>
           <Button
-            variant="icon"
+            variant="ghost"
             className="h-8 w-8 p-0"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -73,7 +73,7 @@ export function DataTablePagination<TData>({
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
-            variant="icon"
+            variant="ghost"
             className="h-8 w-8 p-0"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
@@ -82,7 +82,7 @@ export function DataTablePagination<TData>({
             <ChevronRight className="h-4 w-4" />
           </Button>
           <Button
-            variant="icon"
+            variant="ghost"
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}

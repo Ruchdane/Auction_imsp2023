@@ -20,5 +20,5 @@ export const themes: ThemeElement[] = [
     icon: <Moon />,
     name: "Dark",
     className: "dark",
-  }
+  },
 ];

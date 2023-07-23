@@ -7,7 +7,7 @@ import {
   red,
   lime,
   emerald,
-  neutral
+  neutral,
 } from "tailwindcss/colors";
 const lightTheme = {
   backgroundColor: {
