@@ -24,7 +24,7 @@ function ThemeDemo() {
           </Button>
         </div>
         <p className="bg-secondary text-center shadow shadow-md ring rounded-lg px-8 py-16">
-          <Label className="text-main">The current count is</Label>
+          <Label>The current count is</Label>
           {"  "}
           <br />
           <strong className="text-center bold text-xl">{count}</strong>

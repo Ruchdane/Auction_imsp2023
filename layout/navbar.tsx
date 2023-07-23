@@ -1,39 +1,44 @@
 import { LogOut } from "lucide-react";
-import { Navigation, NavigationItem, NavigationItemSection, NavigationSection } from "../ui/navigation";
+import {
+  Navigation,
+  NavigationItem,
+  NavigationItemSection,
+} from "../ui/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 export function Navbar() {
-
-  return <Navigation>
-    <NavigationSection>
-      <label className="font-lg">
-        Auction System
-      </label>
-    </NavigationSection>
-    <NavigationItemSection
-      label={<Profile />}
-    >
-      <NavigationItem href="" label={<>
-        <LogOut size={24} />
-        {"Se déconecter"}
-      </>
-      } />
-    </NavigationItemSection>
-  </Navigation>
+  return (
+    <Navigation className="w-full flex justify-between items-center list-none px-16 py-4">
+      <NavigationItem href="/" label={<label className="cursor-pointer font-lg">Auction System</label>} />
+      <NavigationItemSection label={<Profile />} >
+        <NavigationItem
+          href="/logOut"
+          label={
+            <div className="flex gap-2">
+              <LogOut size={24} />
+              {"Se déconecter"}
+            </div>
+          }
+        />
+      </NavigationItemSection>
+    </Navigation >
+  );
 }
 function useUser() {
   return {
     name: "John Doe",
-    img: "https://api.dicebear.com/6.x/thumbs/svg" //some imageLink
-  }
+    img: "https://api.dicebear.com/6.x/thumbs/svg", //some imageLink
+  };
 }
 
 const Profile = () => {
   let user = useUser();
-  return <>
-    <Avatar>
-      <AvatarImage src={user.img} />
-      <AvatarFallback>{user.name}</AvatarFallback>
-    </Avatar>
-    {user.name}
-  </>
-}
+  return (
+    <>
+      <Avatar>
+        <AvatarImage src={user.img} />
+        <AvatarFallback>{user.name}</AvatarFallback>
+      </Avatar>
+      {user.name}
+    </>
+  );
+};
