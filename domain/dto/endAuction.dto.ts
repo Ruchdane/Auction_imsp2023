@@ -1,3 +1,3 @@
 export type EndAuctionDto = {
-    auctionId: number
+    auctionId: string
 } 

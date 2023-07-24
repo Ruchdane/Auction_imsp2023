@@ -1,4 +1,5 @@
 export type RegisterDto = {
     email: string,
-    password: string 
+    password: string,
+    name: string 
 } 

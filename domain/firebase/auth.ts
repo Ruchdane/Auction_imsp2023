@@ -1,4 +1,4 @@
-import { authApp } from "@/firebase/config";
+
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
@@ -8,6 +8,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
+import { authApp } from "./config";
 
 class AuthFirebase {
   createUserWithEmailAndPassword(

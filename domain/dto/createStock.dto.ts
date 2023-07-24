@@ -1,3 +1,3 @@
 export type CreateStockDto = {
-    ownerId: number
+    ownerId: string
 } 

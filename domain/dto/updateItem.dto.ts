@@ -1,9 +1,10 @@
 export type UpdateItemDto = {
-    itemId: number
+    itemId: string
     name: string,
-    stockId: number,
+    stockId: string,
     quantity: string,
     category: string,
     description: string,
-    initial_price: string
+    initial_price: number,
+    imgUrl: string
 } 

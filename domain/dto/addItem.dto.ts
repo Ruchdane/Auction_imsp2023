@@ -1,8 +1,9 @@
 export type AddItemDto = {
     name: string,
-    stockId: number,
+    stockId: string,
     quantity: number,
     category: string,
     description: string,
-    initial_price: number
+    initial_price: number,
+    imgUrl: string
 } 

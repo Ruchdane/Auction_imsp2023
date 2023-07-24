@@ -1,4 +1,4 @@
 export type BidAgainDto = {
-    bidId: number,
+    bidId: string,
     amount: number
 } 

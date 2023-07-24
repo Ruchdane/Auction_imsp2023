@@ -16,8 +16,7 @@
     "paths": {
       // Backend
       "@/src/*": ["./src/*"],
-      "@/firebase/*": ["./firebase/*"],
-      "@/*": ["./*"]
+      "@/domain/*": ["./domain/*"],
     },
 
     /* Linting */
