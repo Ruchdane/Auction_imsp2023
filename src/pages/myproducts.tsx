@@ -1,5 +1,5 @@
+import ProductCard from "../../feature/product/card";
+
 export default function MyProducts(){
-    return(
-        <h1>Produits</h1>
-    )
+    return <ProductCard/>
 }
