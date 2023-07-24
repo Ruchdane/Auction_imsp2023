@@ -7,7 +7,7 @@ import { Navbar } from "./navbar";
 interface LayoutProps {
   children: ReactNode;
 }
-export default function(props: LayoutProps) {
+export default function (props: LayoutProps) {
   return (
     <ThemeProvider>
       <div className="h-screen w-screen overflow-hidden">
