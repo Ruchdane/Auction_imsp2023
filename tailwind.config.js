@@ -13,7 +13,7 @@ const lightTheme = {
   backgroundColor: {
     DEFAULT: "#f6e9e4",
     primary: "#d8572a",
-    secondary: lime[100],
+    secondary: "#FFFFFF",
     accent: emerald[100],
     muted: orange[100],
 
@@ -31,13 +31,13 @@ const lightTheme = {
     contrast: yellow[200],
   },
   borderColor: {
-    DEFAULT: green[500],
-    tab: green[500],
+    DEFAULT: red[500],
+    tab: red[500],
     active: red[700],
     inactive: yellow[200],
   },
   ringColor: {
-    DEFAULT: green[400],
+    DEFAULT: red[400],
   },
   boxShadowColor: {
     DEFAULT: orange[700],

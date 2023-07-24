@@ -1,9 +1,10 @@
 "use client";
-import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { ThemeContext } from "./context";
 import { useContext, useMemo } from "react";
-import { Button } from "@/ui/button";
+
 import { themes } from "./themes";
+import { Button } from "../../ui/button";
 export function ThemeSwitcher({ className }: { className?: string }) {
   const { state, toggleTheme } = useContext(ThemeContext);
   const currtheme = useMemo(() => {
@@ -18,6 +19,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
             <Button
               asChild
               key={theme.name}
+              //@ts-ignore
               disabled={currtheme?.theme === theme.theme}
               onClick={() => toggleTheme(theme.className)}
               className="flex justify-between gap-1 bg-main"
