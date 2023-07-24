@@ -13,10 +13,6 @@ export const routes = [
     element: <Root />,
     children: [
       {
-        path: "/inscription",
-        element: <Register />,
-      },
-      {
         path: "/mes_produits",
         element: <MyProducts />
       },
@@ -34,5 +30,9 @@ export const routes = [
     path: "/authentification",
     element: <Authentication/>,
   },
+  {
+    path: "/inscription",
+    element: <Register />,
+  }
   
 ];

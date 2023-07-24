@@ -27,7 +27,7 @@ function CreateItem() {
       imageField === null ||
       categoryIndex === null
     );
-  }, [nameField, priceField, quantityField, descriptionField, categoryIndex]);
+  }, [nameField, priceField, quantityField, descriptionField, categoryIndex, imageField]);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -45,26 +45,26 @@ function CreateItem() {
 
   return (
     <div className="text-primary flex flex-col justify-center items-center h-full gap-6 max-w-60">
-      <h2 className="text-3xl font-bold">Create Item</h2>
+      <h2 className="text-3xl font-bold">Ajouter un produit</h2>
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4">
           <div>
             <div>
-              <Label htmlFor="nameField"> Name </Label>
+              <Label htmlFor="nameField"> Nom </Label>
               <Input
                 value={nameField}
                 onChange={(e) => setNameField(e.target.value)}
               />
             </div>
             <div>
-              <Label htmlFor="priceField"> Price </Label>
+              <Label htmlFor="priceField"> Prix </Label>
               <Input
                 value={priceField}
                 onChange={(e) => setPriceField(e.target.value)}
               />
             </div>
             <div>
-              <Label htmlFor="quantityField"> Quantity </Label>
+              <Label htmlFor="quantityField"> Quantité </Label>
               <Input
                 value={quantityField}
                 onChange={(e) => setQuantityField(e.target.value)}
@@ -74,7 +74,7 @@ function CreateItem() {
               <Label htmlFor="ImageField"> Image</Label>
               <div className="flex flex-row items-center">
                 <Button onClick={() => fileInputRef.current?.click()}>
-                  Choose file
+                  Choisir image
                 </Button>
                 <Input
                   onChange={(e) => setImageField(e.target.files?.[0] ?? null)}
@@ -100,7 +100,7 @@ function CreateItem() {
               <ComboBox
                 values={categoryType}
                 index={categoryIndex}
-                placeholder="Category"
+                placeholder="Categori"
                 onChange={(value) => setCategoryIndex(value)}
                 label={(toast) => toast}
               />
@@ -115,7 +115,7 @@ function CreateItem() {
         type="submit"
         className="w-80"
       >
-        create
+        Créer produit
       </Button>
     </div>
   );
