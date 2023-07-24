@@ -5,7 +5,6 @@ import { X } from "lucide-react";
 import { NamedInput } from "../../../ui/input";
 import { Button } from "../../../ui/button";
 
-
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }

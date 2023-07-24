@@ -38,5 +38,4 @@ export const columns: ColumnDef<any>[] = [
     enableHiding: true,
     cell: ({ row }) => <span>{row.getValue("price")}</span>,
   },
-
 ];

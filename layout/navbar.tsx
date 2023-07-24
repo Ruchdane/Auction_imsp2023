@@ -5,6 +5,7 @@ import {
   NavigationItemSection,
 } from "../ui/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { ThemeSwitcher } from "../feature/theme";
 export function Navbar() {
   return (
     <Navigation className="w-full flex justify-between items-center list-none px-8 py-2">
@@ -12,17 +13,20 @@ export function Navbar() {
         href="/"
         label={<label className="cursor-pointer font-lg">Auction System</label>}
       />
-      <NavigationItemSection label={<Profile />}>
-        <NavigationItem
-          href="/logOut"
-          label={
-            <div className="flex gap-2">
-              <LogOut size={24} />
-              {"Se déconecter"}
-            </div>
-          }
-        />
-      </NavigationItemSection>
+      <div className="flex gap-2">
+        <ThemeSwitcher />
+        <NavigationItemSection label={<Profile />}>
+          <NavigationItem
+            href="/logOut"
+            label={
+              <div className="flex gap-2">
+                <LogOut size={24} />
+                {"Se déconecter"}
+              </div>
+            }
+          />
+        </NavigationItemSection>
+      </div>
     </Navigation>
   );
 }
