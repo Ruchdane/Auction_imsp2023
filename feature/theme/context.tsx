@@ -2,7 +2,6 @@
 import React, { createContext, useReducer, useEffect, ReactNode } from "react";
 import { themes } from "./themes";
 
-
 // Define the initial state for the theme
 interface State {
   className: string;
@@ -27,7 +26,7 @@ export const ThemeContext = createContext<{
   toggleTheme: (className: string) => void;
 }>({
   state: { className: themes[0].className }, // Default theme
-  toggleTheme: () => { },
+  toggleTheme: () => {},
 });
 
 interface ThemeProviderProps {
@@ -35,7 +34,9 @@ interface ThemeProviderProps {
 }
 // Create the theme provider component
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [state, dispatch] = useReducer(themeReducer, { className: themes[0].className });
+  const [state, dispatch] = useReducer(themeReducer, {
+    className: themes[0].className,
+  });
 
   useEffect(() => {
     // Retrieve the theme from localStorage if it exists
@@ -64,6 +65,5 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     </ThemeContext.Provider>
   );
 };
-
 
 export default ThemeProvider;
