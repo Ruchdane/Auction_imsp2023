@@ -1,3 +1,3 @@
 export function isActive(href: string): boolean | undefined {
-  return href === "/produit";
+  return window.location.pathname === href;
 }
