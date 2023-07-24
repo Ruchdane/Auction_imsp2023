@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import ThemeProvider from "../feature/theme/context";
-import { ThemeSwitcher } from "../feature/theme";
 import { Toaster } from "../ui/toaster";
 import { Sidebar } from "./sidebar";
 import { Navbar } from "./navbar";
