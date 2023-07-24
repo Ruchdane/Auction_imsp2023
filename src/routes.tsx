@@ -1,20 +1,38 @@
 import App from "./App.tsx";
+import Home from "./pages/home.tsx";
+import Authentication from "./pages/authentication.tsx";
+import Register from "./pages/register.tsx";
+import MyProducts from "./pages/myproducts.tsx";
+import MyAuctions from "./pages/myauctions.tsx";
+import MyBids from "./pages/mybids.tsx";
+import Root from "../layout/root.tsx";
 
 export const routes = [
   {
-    path: "/authentication",
-    element: <App />,
-  },
-  {
-    path: "/inscription",
-    element: <App />,
-  },
-  {
-    path: "/acceuil",
-    element: <App />,
-  },
-  {
     path: "/",
-    element: <App />,
+    element: <Root />,
+    children: [
+      {
+        path: "/inscription",
+        element: <Register />,
+      },
+      {
+        path: "/mes_produits",
+        element: <MyProducts />
+      },
+      {
+        path: "/mes_encheres",
+        element: <MyAuctions />
+      },
+      {
+        path: "/mes_offres",
+        element: <MyBids />
+      }
+    ]
   },
+  {
+    path: "/authentification",
+    element: <Authentication/>,
+  },
+  
 ];

@@ -6,9 +6,10 @@ import TableDemo from "../demo/table";
 
 function App() {
   return (
-    <Root>
-      <TableDemo />
-    </Root>
+    // <Root>
+    //   <TableDemo />
+    // </Root>
+    <h1></h1>
   );
 }
 
