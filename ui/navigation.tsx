@@ -2,6 +2,7 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { ArrowDown } from "lucide-react";
 import { ReactNode } from "react";
 import { cn } from "../utils";
+import { Link } from "react-router-dom";
 
 const Navigation = ({
   children,
@@ -58,11 +59,17 @@ export interface NavigationItemProps {
   href: string;
   className?: string;
 }
+
 const NavigationItem = ({ href, label, className }: NavigationItemProps) => {
   return (
+    <Link to={href}>
     <NavigationMenu.Item className={className}>
-      <NavigationMenu.Link href={href}>{label}</NavigationMenu.Link>
+      <NavigationMenu.Link>      
+        {label}
+      </NavigationMenu.Link>
     </NavigationMenu.Item>
+    </Link>
+
   );
 };
 
