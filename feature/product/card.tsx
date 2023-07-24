@@ -1,9 +1,10 @@
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { Modal, ModalBody, ModalTriger } from "../../ui/modal";
-import { CreateForm } from "./form/create";
+
 import { useState } from "react";
 import { ProductDataTable } from "./data-table";
+import CreateItem from "../../form/createitem";
 
 export default function ProductCard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function ProductCard() {
         <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
           <ModalTriger label="Ajouté un produit" icon={<Plus size={24} />} />
           <ModalBody title="Ajouter un produit" isOpen={isModalOpen}>
-            <CreateForm />
+            <CreateItem />
           </ModalBody>
         </Modal>
       </CardHeader>

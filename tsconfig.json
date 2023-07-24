@@ -15,8 +15,8 @@
     "jsx": "react-jsx",
     "paths": {
       // Backend
-      "@/src/*": ["./src/*"],
-      "@/domain/*": ["./domain/*"],
+      // "@/src/*": ["./src/*"],
+      // "@/domain/*": ["./domain/*"],
     },
 
     /* Linting */

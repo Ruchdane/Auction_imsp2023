@@ -4,6 +4,8 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { ComboBox } from "../ui/combobox";
 import { useToast } from "../ui/use-toast";
+import { AddItemDto } from "../domain/dto/addItem.dto";
+import itemService from "../domain/services/item.service";
 
 function CreateItem() {
   const { toast } = useToast();
@@ -24,23 +26,49 @@ function CreateItem() {
       priceField === "" ||
       quantityField === "" ||
       descriptionField === "" ||
-      imageField === null ||
+      //imageField === null ||
       categoryIndex === null
     );
   }, [nameField, priceField, quantityField, descriptionField, categoryIndex]);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  function handleSubmit(e: any): void {
+  async function handleSubmit(e: any): Promise<void> {
     e.preventDefault();
     setIsloading(() => true);
-    setTimeout(() => {
-      setIsloading(() => false);
+
+    const dto:AddItemDto= {
+      stockId:"ALC9DaaxLNx72nQbChyr",
+      name: nameField,
+      initial_price: parseFloat(priceField),
+      quantity: parseInt(quantityField),
+      description: descriptionField,
+      imgUrl: "None",
+      category: categoryType[categoryIndex ?? 0],
+    };
+
+    // Make an API call to the backend to create the item
+    const response = await itemService.createItem(dto);
+
+    if (response.success) {
       toast({
-        title: toastType[toastIndex ?? 0],
-        description: `${nameField} =[]= ${priceField} =[]= ${quantityField} =[]= ${descriptionField}`,
+        title: "Success",
+        description: `L'article a été ajouté avec succès!`,
       });
-    }, 1000);
+    } else {
+      toast({
+        title: "Error",
+        description: `Error creating the item: ${response.message}`,
+      });
+    }
+    // setTimeout(() => {
+    //   setIsloading(() => false);
+    //   toast({
+    //     title: toastType[toastIndex ?? 0],
+    //     description: `${nameField} =[]= ${priceField} =[]= ${quantityField} =[]= ${descriptionField}`,
+    //   });
+    // }, 1000);
+    setIsloading(false);
   }
 
   return (
