@@ -5,27 +5,25 @@ import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 
 function MakeBid() {
-  const { toast } = useToast()
-  const [someField, setSomeField] = useState("")
+  const { toast } = useToast();
+  const [someField, setSomeField] = useState("");
   const toastType = ["Error", "Warning", "Info"];
 
-
-  const [isLoading, setIsloading] = useState(false)
+  const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
-    return someField === "" 
-  }, [someField])
+    return someField === "";
+  }, [someField]);
 
   function handleSubmit(e: any): void {
     e.preventDefault();
-    setIsloading(() => true)
+    setIsloading(() => true);
     setTimeout(() => {
-      setIsloading(() => false)
+      setIsloading(() => false);
       toast({
         title: toastType[0],
         description: `${someField}`,
-      })
-    }, 1000)
-
+      });
+    }, 1000);
   }
 
   return (
@@ -34,10 +32,19 @@ function MakeBid() {
       <div className="flex flex-col items-center gap-4">
         <div>
           <Label htmlFor="someField"> Amount </Label>
-          <Input value={someField} onChange={e => setSomeField(e.target.value)} />
+          <Input
+            value={someField}
+            onChange={(e) => setSomeField(e.target.value)}
+          />
         </div>
-        
-        <Button isLoading={isLoading} disabled={disabled} onClick={handleSubmit} type="submit" className="w-2/3">
+
+        <Button
+          isLoading={isLoading}
+          disabled={disabled}
+          onClick={handleSubmit}
+          type="submit"
+          className="w-2/3"
+        >
           Make Bid
         </Button>
       </div>

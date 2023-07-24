@@ -6,29 +6,27 @@ import { ComboBox } from "../ui/combobox";
 import { useToast } from "../ui/use-toast";
 
 function FormDemo() {
-  const { toast } = useToast()
-  const [someField, setSomeField] = useState("")
-  const [someOtherField, setSomeOtherField] = useState("")
+  const { toast } = useToast();
+  const [someField, setSomeField] = useState("");
+  const [someOtherField, setSomeOtherField] = useState("");
   const toastType = ["Error", "Warning", "Info"];
   const [toastIndex, setToastIndex] = useState<number | null>(null);
 
-
-  const [isLoading, setIsloading] = useState(false)
+  const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
-    return someField === "" || someOtherField === "" || toastIndex === null
-  }, [someField, someOtherField, toastIndex])
+    return someField === "" || someOtherField === "" || toastIndex === null;
+  }, [someField, someOtherField, toastIndex]);
 
   function handleSubmit(e: any): void {
     e.preventDefault();
-    setIsloading(() => true)
+    setIsloading(() => true);
     setTimeout(() => {
-      setIsloading(() => false)
+      setIsloading(() => false);
       toast({
         title: toastType[toastIndex ?? 0],
         description: `${someField} =[]= ${someOtherField}`,
-      })
-    }, 1000)
-
+      });
+    }, 1000);
   }
 
   return (
@@ -37,11 +35,17 @@ function FormDemo() {
       <div className="flex flex-col gap-4">
         <div>
           <Label htmlFor="someField"> Some Field </Label>
-          <Input value={someField} onChange={e => setSomeField(e.target.value)} />
+          <Input
+            value={someField}
+            onChange={(e) => setSomeField(e.target.value)}
+          />
         </div>
         <div>
           <Label htmlFor="someOtherField"> Some OtherField </Label>
-          <Input value={someOtherField} onChange={e => setSomeOtherField(e.target.value)} />
+          <Input
+            value={someOtherField}
+            onChange={(e) => setSomeOtherField(e.target.value)}
+          />
         </div>
 
         <div>
@@ -52,10 +56,15 @@ function FormDemo() {
             placeholder="Toast Type"
             onChange={(value) => setToastIndex(value)}
             label={(toast) => toast}
-
           />
         </div>
-        <Button isLoading={isLoading} disabled={disabled} onClick={handleSubmit} type="submit" className="w-full">
+        <Button
+          isLoading={isLoading}
+          disabled={disabled}
+          onClick={handleSubmit}
+          type="submit"
+          className="w-full"
+        >
           Submit
         </Button>
       </div>
