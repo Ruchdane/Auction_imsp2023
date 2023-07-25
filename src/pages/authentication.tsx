@@ -1,5 +1,12 @@
+import ThemeProvider from "../../feature/theme/context";
+import Login from "../../form/login";
+import { Toaster } from "../../ui/toaster";
+
 export default function Authentication(){
     return(
-        <h1>HOME</h1>
+        <ThemeProvider>
+        <Login/>
+        <Toaster />
+    </ThemeProvider>
     )
 }

@@ -1,5 +1,12 @@
+import ThemeProvider from "../../feature/theme/context";
+import Signup from "../../form/signup";
+import { Toaster } from "../../ui/toaster";
+
 export default function Register(){
     return(
-        <h1>Register</h1>
+        <ThemeProvider>
+        <Signup/>
+        <Toaster />
+    </ThemeProvider>
     )
 }
