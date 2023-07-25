@@ -14,7 +14,7 @@ export default function ProductCard() {
         <CardTitle> Les Produits</CardTitle>
         <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
           <ModalTriger label="Ajouté un produit" icon={<Plus size={24} />} />
-          <ModalBody title="Ajouter un produit" isOpen={isModalOpen}>
+          <ModalBody title="" isOpen={isModalOpen}>
             <CreateItem />
           </ModalBody>
         </Modal>
