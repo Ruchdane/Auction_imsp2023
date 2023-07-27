@@ -2,39 +2,58 @@ import { useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
+import { RegisterDto } from "../domain/dto/register.dto";
+import AuthService from "../domain/services/auth.service";
+
 
 function Signup() {
   const { toast } = useToast();
   const [emailField, setEmailField] = useState("");
   const [nameField, setNameField] = useState("");
   const [passwordField, setPasswordField] = useState("");
+  const [repasswordField, setRepasswordField] = useState("");
   const toastType = ["Error", "Warning", "Info"];
 
   const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
-    return emailField === "" || passwordField === "";
-  }, [emailField, passwordField]);
+    return emailField === "" || passwordField === "" || repasswordField === "" || (passwordField != repasswordField);
+  }, [emailField, passwordField, repasswordField]);
 
-  function handleSubmit(e: any): void {
+  async function handleSubmit(e: any): Promise<void> {
     e.preventDefault();
     setIsloading(() => true);
-    setTimeout(() => {
-      setIsloading(() => false);
+
+    const dto: RegisterDto = {
+      email: emailField,
+      password: passwordField,
+      name: nameField
+  } 
+
+    const response = await AuthService.signup(dto);
+
+    if (response.success) {
       toast({
-        title: toastType[0],
-        description: `${""}`,
+        title: "Success",
+        description: `Connexion réussie`,
       });
-    }, 1000);
+    } else {
+      toast({
+        title: "Error",
+        description: `${response.message}`,
+      });
+    }
+    setIsloading(false);
   }
 
   return (
     <div className="flex flex-col justify-center items-center h-screen ">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-96 h-96">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-96 h-100">
         <div className="text-primary flex flex-col justify-center items-center h-full gap-6 max-w-60">
           <h2 className="text-3xl font-bold">Inscription</h2>
           <div className="flex flex-col items-center gap-4">
             <div className="w-full">
               <Input
+                type="email"
                 placeholder="Email"
                 value={emailField}
                 onChange={(e) => setEmailField(e.target.value)}
@@ -49,12 +68,21 @@ function Signup() {
             </div>
             <div className="w-full">
               <Input
+                type="password"
                 placeholder="Mot de passe"
                 value={passwordField}
                 onChange={(e) => setPasswordField(e.target.value)}
               />
+            </div>
+            <div className="w-full">
+              <Input
+                type="password"
+                placeholder="Confirmer mot de passe"
+                value={repasswordField}
+                onChange={(e) => setRepasswordField(e.target.value)}
+              />
               <a className="float-right" href="#">
-                Forgot password?
+                mot de passe oublié?
               </a>
             </div>
 
@@ -70,7 +98,7 @@ function Signup() {
               </Button>
               <span>
                 Vous avez déjà un compte?{" "}
-                <a className="ml-2" href="#">
+                <a className="ml-2" href="/authentification">
                   Se connecter
                 </a>
               </span>
