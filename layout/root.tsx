@@ -16,7 +16,7 @@ export default function Root(/*props: LayoutProps*/) {
         <div className="h-full w-full flex">
           <Sidebar />
           <main className="p-4 pb-32 overflow-y-scroll overflow-x w-full h-full">
-            <Outlet/>
+            <Outlet />
           </main>
         </div>
       </div>

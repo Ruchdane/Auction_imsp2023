@@ -1,5 +1,5 @@
 export type MakeBidDto = {
-    auctionId: string,
-    amount: number,
-    bidderId:string
-} 
+  auctionId: string;
+  amount: number;
+  bidderId: string;
+};

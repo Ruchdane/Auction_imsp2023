@@ -14,25 +14,24 @@ export const routes = [
     children: [
       {
         path: "/mes_produits",
-        element: <MyProducts />
+        element: <MyProducts />,
       },
       {
         path: "/mes_encheres",
-        element: <MyAuctions />
+        element: <MyAuctions />,
       },
       {
         path: "/mes_offres",
-        element: <MyBids />
-      }
-    ]
+        element: <MyBids />,
+      },
+    ],
   },
   {
     path: "/authentification",
-    element: <Authentication/>,
+    element: <Authentication />,
   },
   {
     path: "/inscription",
     element: <Register />,
-  }
-  
+  },
 ];

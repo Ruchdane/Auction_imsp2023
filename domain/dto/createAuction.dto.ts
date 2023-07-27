@@ -1,4 +1,4 @@
 export type CreateAuctionDto = {
-    itemId: string,
-    sellerId: string
-} 
+  itemId: string;
+  sellerId: string;
+};

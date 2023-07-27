@@ -11,11 +11,16 @@ import {
 } from "firebase/firestore";
 import { User } from "../types/user";
 import { Item } from "../types/items";
-import { ErrorResponse, SuccessResponse } from "../interfaces/response.interface";
+import {
+  ErrorResponse,
+  SuccessResponse,
+} from "../interfaces/response.interface";
 import { Stock } from "../types/stock";
 
 class StockService {
-  async createStock(dto: CreateStockDto): Promise<SuccessResponse<string> | ErrorResponse> {
+  async createStock(
+    dto: CreateStockDto,
+  ): Promise<SuccessResponse<string> | ErrorResponse> {
     try {
       const docRef = await addDoc(collection(firestoreApp, "stocks"), dto);
       return { success: true, data: docRef.id };
@@ -25,7 +30,9 @@ class StockService {
     }
   }
 
-  async getStockUser(userId: string): Promise<SuccessResponse<Stock> | ErrorResponse> {
+  async getStockUser(
+    userId: string,
+  ): Promise<SuccessResponse<Stock> | ErrorResponse> {
     try {
       const userRef = doc(firestoreApp, "users", userId);
       const userSnapshot = await getDoc(userRef);
@@ -47,7 +54,7 @@ class StockService {
       const itemCollectionRef = collection(firestoreApp, "items");
       const itemsQuery = query(
         itemCollectionRef,
-        where("stockId", "==", userData.stockId)
+        where("stockId", "==", userData.stockId),
       );
       const itemsSnapshot = await getDocs(itemsQuery);
 
@@ -67,7 +74,10 @@ class StockService {
       };
     } catch (error) {
       console.log("Error during retrieval of user's stock:", error);
-      return { success: false, message: "Error during retrieval of user's stock." };
+      return {
+        success: false,
+        message: "Error during retrieval of user's stock.",
+      };
     }
   }
 }

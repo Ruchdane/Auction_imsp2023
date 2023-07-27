@@ -12,29 +12,33 @@ import {
 import { firestoreApp } from "../firebase/config";
 import StockService from "./stock.service";
 
-import { ErrorResponse, SuccessResponse } from "../interfaces/response.interface";
+import {
+  ErrorResponse,
+  SuccessResponse,
+} from "../interfaces/response.interface";
 import { User } from "../types/user";
 import { CreateStockDto } from "../dto/createStock.dto";
 
 class AuthService {
-  async signup(dto: RegisterDto): Promise<SuccessResponse<User> | ErrorResponse> {
+  async signup(
+    dto: RegisterDto,
+  ): Promise<SuccessResponse<User> | ErrorResponse> {
     try {
-
       const userCollectionRef = collection(firestoreApp, "users");
       const existingUserQuery = query(
         userCollectionRef,
-        where("name", "==", dto.name)
+        where("name", "==", dto.name),
       );
 
       const existingUserSnapshot = await getDocs(existingUserQuery);
 
       if (!existingUserSnapshot.empty) {
-        return { success: false, message: 'You name is already taken' };
+        return { success: false, message: "You name is already taken" };
       }
-      
+
       const { user } = await AuthFirebase.createUserWithEmailAndPassword(
         dto.email,
-        dto.password
+        dto.password,
       );
       const createdUser = await this.createUserWithName(user.uid, dto);
       return { success: true, data: createdUser };
@@ -48,7 +52,7 @@ class AuthService {
     try {
       const { user } = await AuthFirebase.signInWithEmailAndPassword(
         dto.email,
-        dto.password
+        dto.password,
       );
       const loggedInUser = await this.getUser(user.uid);
       return { success: true, data: loggedInUser };
@@ -68,7 +72,10 @@ class AuthService {
     }
   }
 
-  private async createUserWithName(uid: string, dto: RegisterDto): Promise<User> {
+  private async createUserWithName(
+    uid: string,
+    dto: RegisterDto,
+  ): Promise<User> {
     try {
       const { password, ...userData } = dto;
 
@@ -81,13 +88,13 @@ class AuthService {
 
       const stockData: CreateStockDto = { ownerId: userRef.id };
       const result = await StockService.createStock(stockData);
-      let stockId:string;
+      let stockId: string;
       if (result.success) {
         stockId = result.data;
       } else {
         throw new Error("Error during createStock");
       }
-      
+
       await updateDoc(userRef, { stockId });
 
       return {

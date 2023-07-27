@@ -5,7 +5,6 @@ import { useToast } from "../ui/use-toast";
 import { RegisterDto } from "../domain/dto/register.dto";
 import AuthService from "../domain/services/auth.service";
 
-
 function Signup() {
   const { toast } = useToast();
   const [emailField, setEmailField] = useState("");
@@ -16,7 +15,12 @@ function Signup() {
 
   const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
-    return emailField === "" || passwordField === "" || repasswordField === "" || (passwordField != repasswordField);
+    return (
+      emailField === "" ||
+      passwordField === "" ||
+      repasswordField === "" ||
+      passwordField != repasswordField
+    );
   }, [emailField, passwordField, repasswordField]);
 
   async function handleSubmit(e: any): Promise<void> {
@@ -26,8 +30,8 @@ function Signup() {
     const dto: RegisterDto = {
       email: emailField,
       password: passwordField,
-      name: nameField
-  } 
+      name: nameField,
+    };
 
     const response = await AuthService.signup(dto);
 

@@ -63,11 +63,8 @@ export interface NavigationItemProps {
 const NavigationItem = ({ href, label, className }: NavigationItemProps) => {
   return (
     <NavigationMenu.Item className={className}>
-      <NavLink to={href}>
-        {label}
-      </NavLink>
+      <NavLink to={href}>{label}</NavLink>
     </NavigationMenu.Item>
-
   );
 };
 

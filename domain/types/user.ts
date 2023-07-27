@@ -1,6 +1,6 @@
 export type User = {
-    id: string,
-    email: string,
-    name: string,
-    stockId: string
-} 
+  id: string;
+  email: string;
+  name: string;
+  stockId: string;
+};

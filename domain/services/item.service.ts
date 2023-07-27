@@ -14,11 +14,15 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { ErrorResponse, SuccessResponse } from "../interfaces/response.interface";
-
+import {
+  ErrorResponse,
+  SuccessResponse,
+} from "../interfaces/response.interface";
 
 class ItemService {
-  async createItem(dto: AddItemDto): Promise<SuccessResponse<string> | ErrorResponse> {
+  async createItem(
+    dto: AddItemDto,
+  ): Promise<SuccessResponse<string> | ErrorResponse> {
     try {
       const itemData = {
         ...dto,
@@ -29,13 +33,16 @@ class ItemService {
       const existingItemQuery = query(
         itemCollectionRef,
         where("name", "==", dto.name),
-        where("stockId", "==", dto.stockId)
+        where("stockId", "==", dto.stockId),
       );
 
       const existingItemSnapshot = await getDocs(existingItemQuery);
 
       if (!existingItemSnapshot.empty) {
-        return { success: false, message: 'Item with name already exist in stock' };
+        return {
+          success: false,
+          message: "Item with name already exist in stock",
+        };
       }
       const itemRef = await addDoc(itemCollectionRef, itemData);
       return { success: true, data: itemRef.id };
@@ -45,14 +52,19 @@ class ItemService {
     }
   }
 
-  async getItem(itemId: string): Promise<SuccessResponse<Item> | ErrorResponse> {
+  async getItem(
+    itemId: string,
+  ): Promise<SuccessResponse<Item> | ErrorResponse> {
     try {
       const itemRef = doc(firestoreApp, "items", itemId);
       const itemSnapshot = await getDoc(itemRef);
 
       if (itemSnapshot.exists()) {
         const itemData = itemSnapshot.data();
-        return { success: true, data: { id: itemSnapshot.id, ...itemData } as Item };
+        return {
+          success: true,
+          data: { id: itemSnapshot.id, ...itemData } as Item,
+        };
       } else {
         return { success: false, message: "Item not found." };
       }
@@ -62,11 +74,13 @@ class ItemService {
     }
   }
 
-  async updateItem(dto: UpdateItemDto): Promise<SuccessResponse<null> | ErrorResponse> {
+  async updateItem(
+    dto: UpdateItemDto,
+  ): Promise<SuccessResponse<null> | ErrorResponse> {
     try {
       const itemRef = doc(firestoreApp, `items/${dto.itemId}`);
       const { itemId: id, stockId, ...updateData } = dto;
-      await updateDoc(itemRef, {...updateData});
+      await updateDoc(itemRef, { ...updateData });
       return { success: true, data: null };
     } catch (error) {
       console.log("Error updating the item:", error);
@@ -74,7 +88,10 @@ class ItemService {
     }
   }
 
-  async setStatus(itemId: string, status: StatusItem): Promise<SuccessResponse<null> | ErrorResponse> {
+  async setStatus(
+    itemId: string,
+    status: StatusItem,
+  ): Promise<SuccessResponse<null> | ErrorResponse> {
     try {
       const itemRef = doc(firestoreApp, `items/${itemId}`);
       await updateDoc(itemRef, { status });
@@ -85,13 +102,18 @@ class ItemService {
     }
   }
 
-  async deleteItem(dto: DeleteItemDto): Promise<SuccessResponse<null> | ErrorResponse> {
+  async deleteItem(
+    dto: DeleteItemDto,
+  ): Promise<SuccessResponse<null> | ErrorResponse> {
     try {
       const itemRef = doc(firestoreApp, `items/${dto.itemId}`);
       const itemSnapshot = await getDoc(itemRef);
       const itemData = itemSnapshot.data() as Item;
       if (itemData.status === StatusItem.AUCTION) {
-        return { success: false, message: "The item is currently up for auction." };
+        return {
+          success: false,
+          message: "The item is currently up for auction.",
+        };
       }
       await deleteDoc(itemRef);
       return { success: true, data: null };

@@ -24,7 +24,7 @@ const links: NavigationItemProps[] = [
   {
     label: "Mes offres",
     href: "/mes_offres",
-  }
+  },
 ];
 
 /*export function Sidebar(){
@@ -58,7 +58,7 @@ export function Sidebar() {
             to={link.href}
             className={cn(
               "px-4 py-6 cursor-pointer w-full",
-              (location.pathname === link.href) && "bg-primary hover:bg-muted",
+              location.pathname === link.href && "bg-primary hover:bg-muted",
             )}
             key={key}
           >

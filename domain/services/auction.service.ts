@@ -42,7 +42,10 @@ class AuctionService {
       const auctionCollectionRef = collection(firestoreApp, "auctions");
       const newAuctionRef = await addDoc(auctionCollectionRef, newAuctionData);
 
-      const result = await itemService.setStatus(dto.itemId,StatusItem.AUCTION);
+      const result = await itemService.setStatus(
+        dto.itemId,
+        StatusItem.AUCTION,
+      );
       if (result.success) {
         result.data;
       } else {
@@ -180,7 +183,6 @@ class AuctionService {
       const items: Item[] = [];
       itemsSnapshot.forEach((itemDoc) => {
         items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
-        
       });
 
       const auctionsWithAuctionders: Auction[] = activeAuctions.map(

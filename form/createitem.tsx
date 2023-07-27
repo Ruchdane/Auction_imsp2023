@@ -25,12 +25,19 @@ function CreateItem() {
     return (
       nameField === "" ||
       priceField < 0 ||
-      quantityField < 0  ||
+      quantityField < 0 ||
       descriptionField === "" ||
       imageField === null ||
       categoryIndex === null
     );
-  }, [nameField, priceField, quantityField, descriptionField, categoryIndex, imageField]);
+  }, [
+    nameField,
+    priceField,
+    quantityField,
+    descriptionField,
+    categoryIndex,
+    imageField,
+  ]);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -38,8 +45,8 @@ function CreateItem() {
     e.preventDefault();
     setIsloading(() => true);
 
-    const dto:AddItemDto= {
-      stockId:"ALC9DaaxLNx72nQbChyr",
+    const dto: AddItemDto = {
+      stockId: "ALC9DaaxLNx72nQbChyr",
       name: nameField,
       initial_price: priceField,
       quantity: quantityField,

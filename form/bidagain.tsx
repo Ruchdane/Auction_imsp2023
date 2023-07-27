@@ -31,7 +31,10 @@ function BidAgain() {
       <h2 className="text-3xl font-bold"></h2>
       <div className="flex flex-row items-center gap-4">
         <div className="flex items-center">
-          <Label className="mr-2" htmlFor="someField"> Montant </Label>
+          <Label className="mr-2" htmlFor="someField">
+            {" "}
+            Montant{" "}
+          </Label>
           <Input
             type="number"
             min="0"

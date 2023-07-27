@@ -1,3 +1,3 @@
 export type DeleteItemDto = {
-    itemId: string
-} 
+  itemId: string;
+};

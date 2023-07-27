@@ -47,7 +47,7 @@ function CreateAuction() {
     e.preventDefault();
     setIsloading(true);
 
-    const selectedItem = stock?.items[itemIndex??0]; // Get the selected item from the stock
+    const selectedItem = stock?.items[itemIndex ?? 0]; // Get the selected item from the stock
 
     if (!selectedItem) {
       // Handle error or show toast message
