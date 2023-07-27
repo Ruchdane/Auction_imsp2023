@@ -49,19 +49,21 @@ const links: NavigationItemProps[] = [
 }*/
 
 export function Sidebar() {
-  let location = useLocation();
+  const location = useLocation();
   return (
     <Navigation className="h-full w-64">
       <NavigationSection className="flex flex-col">
         {links.map((link, key) => (
-          <NavigationItem
+          <NavLink
+            to={link.href}
             className={cn(
               "px-4 py-6 cursor-pointer w-full",
               (location.pathname === link.href) && "bg-primary hover:bg-muted",
             )}
             key={key}
-            {...link}
-          />
+          >
+            {link.label}
+          </NavLink>
         ))}
       </NavigationSection>
     </Navigation>
