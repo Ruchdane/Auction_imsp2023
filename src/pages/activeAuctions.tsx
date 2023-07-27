@@ -23,7 +23,7 @@ export default function ActiveAuctions() {
   // Par exemple :
   return (
     <div>
-      Liste des actives auctions :
+      Liste des actives auctions
       {activeAuctions.map((auction) => (
         <div key={auction.id}>{auction.item.name}</div>
       ))}

@@ -4,11 +4,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import { Button } from "./button";
+import { cn } from "../utils";
 const Modal = Dialog.Root;
 type ModalBodyProps = {
   // Modal
   title: string;
   description?: string;
+  size?: string;
   isOpen: boolean;
   children?: ReactNode;
 };
@@ -17,11 +19,17 @@ interface ModalTriggerProps {
   icon: React.ReactNode;
   label: string;
   disabled?: boolean;
+  className?: string;
 }
 const ModalTriger = (props: ModalTriggerProps) => {
   return (
     <Dialog.Trigger asChild>
-      <Button variant="primary" title={props.label} disabled={props.disabled}>
+      <Button
+        variant="primary"
+        className={props.className}
+        title={props.label}
+        disabled={props.disabled}
+      >
         {props.icon}
       </Button>
     </Dialog.Trigger>
@@ -51,7 +59,10 @@ function ModalBody(props: ModalBodyProps) {
       >
         <Dialog.Content
           forceMount
-          className="w-full overflow-hidden md:max-w-md md:rounded-2xl md:border md:shadow-xl bg-secondary"
+          className={cn(
+            props.size ?? "w-full md:max-w-md",
+            "overflow-hidden md:rounded-2xl md:border md:shadow-xl bg-secondary",
+          )}
         >
           <div className="space-y-3 bg-secondary px-4 py-6">
             <Dialog.Title className="flex justify-between">

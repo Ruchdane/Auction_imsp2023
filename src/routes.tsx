@@ -13,6 +13,10 @@ export const routes = [
     element: <Root />,
     children: [
       {
+        path: "/",
+        element: <Home/>
+      },
+      {
         path: "/mes_produits",
         element: <MyProducts />,
       },
