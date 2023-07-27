@@ -11,5 +11,6 @@ export type Auction = {
   startDate: any,
   endDate: any,
   item: Item,
+  itemId:string,
   status: StatusAuction
 }

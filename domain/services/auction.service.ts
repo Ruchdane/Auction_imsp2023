@@ -20,7 +20,7 @@ import {
   SuccessResponse,
   ErrorResponse,
 } from "../interfaces/response.interface";
-import { Item } from "../types/items";
+import { Item, StatusItem } from "../types/items";
 class AuctionService {
   async createAuction(
     dto: CreateAuctionDto,
@@ -32,30 +32,22 @@ class AuctionService {
       date.setMinutes(date.getMinutes() + 5);
       const endDate = Timestamp.fromDate(date);
 
-      let itemData: Item;
-      const result = await itemService.getItem(dto.itemId);
-      if (result.success) {
-        itemData = result.data;
-      } else {
-        return result;
-      }
       const newAuctionData = {
-        sellerId: dto.sellerId,
+        ...dto,
         status: StatusAuction.OPEN,
         startDate,
         endDate,
-        item: {
-          id: dto.itemId,
-          name: itemData.name,
-          imgUrl: itemData.imgUrl,
-          price: itemData.initial_price,
-          quantity: itemData.quantity,
-        },
       };
 
       const auctionCollectionRef = collection(firestoreApp, "auctions");
       const newAuctionRef = await addDoc(auctionCollectionRef, newAuctionData);
 
+      const result = await itemService.setStatus(dto.itemId,StatusItem.AUCTION);
+      if (result.success) {
+        result.data;
+      } else {
+        return result;
+      }
       return { success: true, data: newAuctionRef.id };
     } catch (error) {
       console.log("Error creating the auction :", error);
@@ -116,6 +108,8 @@ class AuctionService {
   > {
     try {
       const auctionCollectionRef = collection(firestoreApp, "auctions");
+      const itemCollectionRef = collection(firestoreApp, "items");
+
       const q = query(
         auctionCollectionRef,
         where("status", "==", StatusAuction.OPEN),
@@ -125,10 +119,32 @@ class AuctionService {
 
       activeAuctionsSnapshot.forEach((itemDoc) => {
         activeAuctions.push({ id: itemDoc.id, ...itemDoc.data() } as Auction);
-        console.log("cela");
       });
 
-      return { success: true, data: activeAuctions };
+      const itemIds: string[] = activeAuctions.map((it) => it.itemId);
+
+      const itemsQuery = query(itemCollectionRef, where("id", "in", itemIds));
+
+      const itemsSnapshot = await getDocs(itemsQuery);
+
+      const items: Item[] = [];
+      itemsSnapshot.forEach((itemDoc) => {
+        items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
+      });
+
+      //Correspondre chaque élément du tableau Bid à User
+      const auctionsWithAuctionders: Auction[] = activeAuctions.map(
+        (auction) => {
+          const itemId = auction.itemId;
+          const item = items.find((it) => it.id === itemId);
+          const itemDetails = item ? item : ({} as Item);
+          let result = auction;
+          result.item = itemDetails;
+          return result;
+        },
+      );
+
+      return { success: true, data: auctionsWithAuctionders };
     } catch (error) {
       console.log("Error retrieving active auctions :", error);
       return { success: false, message: "Error retrieving active auctions." };
@@ -139,21 +155,45 @@ class AuctionService {
     callback: (activeAuctions: Auction[]) => void,
   ): () => void {
     const auctionCollectionRef = collection(firestoreApp, "auctions");
+    const itemCollectionRef = collection(firestoreApp, "items");
     const q = query(
       auctionCollectionRef,
       where("status", "==", StatusAuction.OPEN),
     );
 
     // OnSnapshot écoute les mises à jour en temps réel
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
       const activeAuctions: Auction[] = [];
+
       snapshot.forEach((itemDoc) => {
         activeAuctions.push({ id: itemDoc.id, ...itemDoc.data() } as Auction);
-        console.log("ici");
+        console.log("update");
+      });
+      const itemIds: string[] = activeAuctions.map((it) => it.itemId);
+      if (itemIds.length === 0) {
+        callback([]);
+        return;
+      }
+
+      const itemsSnapshot = await getDocs(itemCollectionRef);
+
+      const items: Item[] = [];
+      itemsSnapshot.forEach((itemDoc) => {
+        items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
+        
       });
 
-      // Appel du callback avec les nouvelles données
-      callback(activeAuctions);
+      const auctionsWithAuctionders: Auction[] = activeAuctions.map(
+        (auction) => {
+          const itemId = auction.itemId;
+          const item = items.find((it) => it.id === itemId);
+          const itemDetails = item ? item : ({} as Item);
+          let result = auction;
+          result.item = itemDetails;
+          return result;
+        },
+      );
+      callback(auctionsWithAuctionders);
     });
 
     // Retourner une fonction pour se désabonner lorsqu'elle n'est plus nécessaire

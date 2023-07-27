@@ -215,6 +215,10 @@ class BidService {
       });
 
       const bidderIds: string[] = bids.map((it) => it.bidderId);
+      if (bidderIds.length === 0) {
+        callback([]);
+        return;
+      }
       const usersQuery = query(userCollectionRef, where("id", "in", bidderIds));
       const usersSnapshot = await getDocs(usersQuery);
 
