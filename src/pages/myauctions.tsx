@@ -12,10 +12,10 @@ export default function MyAuctions(){
         <CardHeader className="flex justify-between item-center gap-4">
             <CardTitle> Les enchères </CardTitle>
             <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <ModalTriger label="Créer un enchère" icon={<Plus size={24} />} />
-            <ModalBody title="" isOpen={isModalOpen}>
-                <CreateAuction />
-            </ModalBody>
+                <ModalTriger label="Créer un enchère" icon={<Plus size={24} />} />
+                <ModalBody title="" isOpen={isModalOpen}>
+                    <CreateAuction />
+                </ModalBody>
             </Modal>
         </CardHeader>
         </Card>

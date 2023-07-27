@@ -32,7 +32,7 @@ export function ComboBox<T>(props: ComboBoxProps<T>) {
         >
           {props.index !== null
             ? props.label(props.values[props.index])
-            : "Choisisez " + props.placeholder}
+            : "" + props.placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

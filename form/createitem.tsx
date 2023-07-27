@@ -5,13 +5,14 @@ import { Input } from "../ui/input";
 import { ComboBox } from "../ui/combobox";
 import { useToast } from "../ui/use-toast";
 import { AddItemDto } from "../domain/dto/addItem.dto";
+import { Textarea } from "../ui/textarea";
 import itemService from "../domain/services/item.service";
 
 function CreateItem() {
   const { toast } = useToast();
   const [nameField, setNameField] = useState("");
-  const [priceField, setPriceField] = useState("");
-  const [quantityField, setQuantityField] = useState("");
+  const [priceField, setPriceField] = useState(0);
+  const [quantityField, setQuantityField] = useState(1);
   const [descriptionField, setDescriptionField] = useState("");
   const [imageField, setImageField] = useState<File | null>(null);
   const categoryType = ["Option 1", "Option 2", "Option 3"];
@@ -23,10 +24,10 @@ function CreateItem() {
   const disabled = useMemo(() => {
     return (
       nameField === "" ||
-      priceField === "" ||
-      quantityField === "" ||
+      priceField < 0 ||
+      quantityField < 0  ||
       descriptionField === "" ||
-      //imageField === null ||
+      imageField === null ||
       categoryIndex === null
     );
   }, [nameField, priceField, quantityField, descriptionField, categoryIndex, imageField]);
@@ -40,8 +41,8 @@ function CreateItem() {
     const dto:AddItemDto= {
       stockId:"ALC9DaaxLNx72nQbChyr",
       name: nameField,
-      initial_price: parseFloat(priceField),
-      quantity: parseInt(quantityField),
+      initial_price: priceField,
+      quantity: quantityField,
       description: descriptionField,
       imgUrl: "None",
       category: categoryType[categoryIndex ?? 0],
@@ -58,16 +59,9 @@ function CreateItem() {
     } else {
       toast({
         title: "Error",
-        description: `Error creating the item: ${response.message}`,
+        description: `${response.message}`,
       });
     }
-    // setTimeout(() => {
-    //   setIsloading(() => false);
-    //   toast({
-    //     title: toastType[toastIndex ?? 0],
-    //     description: `${nameField} =[]= ${priceField} =[]= ${quantityField} =[]= ${descriptionField}`,
-    //   });
-    // }, 1000);
     setIsloading(false);
   }
 
@@ -87,15 +81,19 @@ function CreateItem() {
             <div>
               <Label htmlFor="priceField"> Prix </Label>
               <Input
+                type="number"
+                min="0"
                 value={priceField}
-                onChange={(e) => setPriceField(e.target.value)}
+                onChange={(e) => setPriceField(Number(e.target.value))}
               />
             </div>
             <div>
               <Label htmlFor="quantityField"> Quantité </Label>
               <Input
+                type="number"
+                min="1"
                 value={quantityField}
-                onChange={(e) => setQuantityField(e.target.value)}
+                onChange={(e) => setQuantityField(Number(e.target.value))}
               />
             </div>
             <div>
@@ -119,7 +117,7 @@ function CreateItem() {
           <div>
             <div className="flex flex-col mb-4">
               <Label htmlFor="descriptionField"> Description </Label>
-              <textarea
+              <Textarea
                 value={descriptionField}
                 onChange={(e) => setDescriptionField(e.target.value)}
               />
@@ -128,7 +126,7 @@ function CreateItem() {
               <ComboBox
                 values={categoryType}
                 index={categoryIndex}
-                placeholder="Categori"
+                placeholder="Categories"
                 onChange={(value) => setCategoryIndex(value)}
                 label={(toast) => toast}
               />
