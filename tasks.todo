@@ -1,0 +1,13 @@
+☐ Implémenter le système la relance d'une enchère lorsque le temps est écoulé
+☐ Implémenter le mécanisme de fermerture de l'enchère par le propriétaire lorsque aucune offre n'est faite
+☐ Régler le problème d'image chargé d'un item
+☐ Effectuer une vérification lorsque l'on crée une enchère pour s'assurer qu'il n'y aucune enchère existante
+en cours pour cet item
+☐ Implémenter le processus du choix du gagnant 
+☐ Notifier les participants d'une enchère et le propriétaire à la fin de l'enchère
+☐ Changer le statut d'un item après sa vente
+☐ Récupérer que les items en enchères et ceux disponible dans le stock d'un utilisateur
+☐ Obliger un utilisateur à se connecter si il veut effectuer les opérations (faire une offre, 
+réenchérir une offre, actions du stock )
+☐ Implémenter le mécanisme de désinscription et de déconnexion d'un utilisateur final
+☐ Implémenter l'intégration des utilisateurs
