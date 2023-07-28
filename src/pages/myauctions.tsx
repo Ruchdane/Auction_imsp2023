@@ -26,7 +26,7 @@ export default function MyAuctions() {
             <ActiveAuctions />
           </CardContent>
         </Card>
-        <BidsCard auctionId={0} />
+        <BidsCard auctionId={"Xh0W92dPTvUZ6NCRkaCg"} />
       </div>
     </>
   );

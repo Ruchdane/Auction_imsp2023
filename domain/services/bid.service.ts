@@ -164,10 +164,10 @@ class BidService {
       });
       const bidderIds: string[] = bids.map((it) => it.bidderId);
 
-      const usersQuery = query(userCollectionRef, where("id", "in", bidderIds));
+      //const usersQuery = query(userCollectionRef, where("id", "in", bidderIds));
 
       // Exécuter la requête et récupérer les utilisateurs correspondants
-      const usersSnapshot = await getDocs(usersQuery);
+      const usersSnapshot = await getDocs(userCollectionRef);
 
       // Convertir les données snapshot en tableau d'objets User
       const users: User[] = [];
@@ -219,14 +219,15 @@ class BidService {
         callback([]);
         return;
       }
-      const usersQuery = query(userCollectionRef, where("id", "in", bidderIds));
-      const usersSnapshot = await getDocs(usersQuery);
+      //const usersQuery = query(userCollectionRef, where("id", "in", bidderIds));
+      const usersSnapshot = await getDocs(userCollectionRef);
 
       const users: User[] = [];
+
       usersSnapshot.forEach((userDoc) => {
         users.push({ id: userDoc.id, ...userDoc.data() } as User);
       });
-
+      console.log("users:", users);
       const bidsWithBidders: Bid[] = bids.map((bid) => {
         const bidderId = bid.bidderId;
         const bidder = users.find((user) => user.id === bidderId);

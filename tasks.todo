@@ -11,3 +11,8 @@ en cours pour cet item
 réenchérir une offre, actions du stock )
 ☐ Implémenter le mécanisme de désinscription et de déconnexion d'un utilisateur final
 ☐ Implémenter l'intégration des utilisateurs
+
+
+
+
+☐ Vérifier tous les where("id", "in") de firebase

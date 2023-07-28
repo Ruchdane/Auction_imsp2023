@@ -42,42 +42,44 @@ export const columns: ColumnDef<Item>[] = [
     enableSorting: true,
     enableHiding: true,
     cell: ({ row }) => <span>{row.getValue("count")}</span>,
-  }, {
+  },
+  {
     header: "Actions",
-    columns: [{
-      id: "edit",
-      header: "Modifier",
-      accessorFn: row => row,
-      cell(row) {
-        const [isModalOpen, setIsModalOpen] = useState(false);
-        let a = row.getValue()
-        return <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <ModalTriger
-            label="Metre a jour"
-            icon={<Pencil size={24} />}
-          />
-          <ModalBody title="" isOpen={isModalOpen}>
-            <CreateItem />
-          </ModalBody>
-        </Modal >
-      }
-    }, {
-      id: "delete",
-      header: "Supprimer",
-      accessorFn: row => row,
-      cell(row) {
-        const [isModalOpen, setIsModalOpen] = useState(false);
-        let a = row.getValue()
-        return <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <ModalTriger
-            label="Supprimer"
-            icon={<Trash size={24} />}
-          />
-          <ModalBody title="" isOpen={isModalOpen}>
-            <CreateItem />
-          </ModalBody>
-        </Modal >
-      }
-    }]
+    columns: [
+      {
+        id: "edit",
+        header: "Modifier",
+        accessorFn: (row) => row,
+        cell(row) {
+          const [isModalOpen, setIsModalOpen] = useState(false);
+          let a = row.getValue();
+          return (
+            <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <ModalTriger label="Metre a jour" icon={<Pencil size={24} />} />
+              <ModalBody title="" isOpen={isModalOpen}>
+                <CreateItem />
+              </ModalBody>
+            </Modal>
+          );
+        },
+      },
+      {
+        id: "delete",
+        header: "Supprimer",
+        accessorFn: (row) => row,
+        cell(row) {
+          const [isModalOpen, setIsModalOpen] = useState(false);
+          let a = row.getValue();
+          return (
+            <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <ModalTriger label="Supprimer" icon={<Trash size={24} />} />
+              <ModalBody title="" isOpen={isModalOpen}>
+                <CreateItem />
+              </ModalBody>
+            </Modal>
+          );
+        },
+      },
+    ],
   },
 ];

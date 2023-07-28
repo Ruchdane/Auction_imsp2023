@@ -67,10 +67,20 @@ class AuctionService {
 
       if (auctionSnapshot.exists()) {
         const auctionData = auctionSnapshot.data();
-        return {
-          success: true,
-          data: { id: auctionSnapshot.id, ...auctionData } as Auction,
-        };
+
+        const itemRef = doc(firestoreApp, "items", auctionData.itemId);
+        const itemSnapshot = await getDoc(itemRef);
+        if (itemSnapshot.exists()) {
+          const item = itemSnapshot.data() as Item;
+          let result = auctionData;
+          result.item = item;
+          return {
+            success: true,
+            data: { id: auctionSnapshot.id, ...result } as Auction,
+          };
+        } else {
+          return { success: false, message: "Item not found." };
+        }
       } else {
         return { success: false, message: "Auction not found." };
       }
@@ -126,9 +136,9 @@ class AuctionService {
 
       const itemIds: string[] = activeAuctions.map((it) => it.itemId);
 
-      const itemsQuery = query(itemCollectionRef, where("id", "in", itemIds));
+      //const itemsQuery = query(itemCollectionRef, where("id", "in", itemIds));
 
-      const itemsSnapshot = await getDocs(itemsQuery);
+      const itemsSnapshot = await getDocs(itemCollectionRef);
 
       const items: Item[] = [];
       itemsSnapshot.forEach((itemDoc) => {
