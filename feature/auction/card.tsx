@@ -16,26 +16,24 @@ import { Bid } from "../../domain/types/bid";
 interface AuctionCardProps {
   auctionId: string;
 }
-export default function AuctionCard({ auctionId }: AuctionCardProps) {
+export default function AuctionCard({ data }: { data: Auction }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const auction = useAuction(auctionId);
-  const high = useHigtestBid(auctionId);
-  if (auction === null) return <> </>;
-  // const timeRemaining = useTimeRemaining(auction.endDate);
+  const high = useHigtestBid(data.id);
+  const timeRemaining = useTimeRemaining(data.endDate);
 
   return (
     <Card>
       <CardHeader className="flex justify-between item-center gap-4">
-        <CardTitle> {auction.item.name}</CardTitle>
+        <CardTitle> {data.item.name}</CardTitle>
       </CardHeader>
       <CardContent>
         <img
-          src={auction.item.imgUrl}
+          src={data.item.imgUrl}
           width="200"
           height="200"
           className="bg-contrast"
         />
-        <p> Temps restant : {}</p>
+        <p> Temps restant : {timeRemaining}</p>
         <p> Plus Offrant : {high} XOF</p>
         <div className="flex justify-between items-center pt-4">
           <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
