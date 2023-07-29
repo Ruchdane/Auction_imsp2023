@@ -42,10 +42,14 @@ const Toast = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
+  const backgroundColor =
+    variant === "destructive" ? "bg-red-500" : "bg-green-500";
+  console.log("variant:", variant);
+  console.log("backgroundColor:", backgroundColor);
   return (
     <ToastPrimitives.Root
       ref={ref}
-      className={cn(toastVariants({ variant }), "bg-red-500", className)}
+      className={cn(toastVariants({ variant }), backgroundColor, className)}
       {...props}
     />
   );
