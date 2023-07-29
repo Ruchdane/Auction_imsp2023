@@ -69,9 +69,7 @@ export default function AuctionCard({ data }: { data: Auction }) {
 
 export function BidsCard({ auctionId }: AuctionCardProps) {
   const auction: Auction | null = useAuction(auctionId);
-  const high_bids: Bid[] = useAuctionHighBid(auctionId);
-  console.log("high_bids:", high_bids);
-
+  const high_bids: Bid[] = useAuctionHighBid(auctionId);  
   // const timeRemaining = useTimeRemaining(auction?.endDate);
 
   if (auction === null) return <> </>;

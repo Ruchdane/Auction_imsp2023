@@ -80,7 +80,7 @@ export const useAuctionHighBid = (auctionId: string) => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [auctionId]);
 
   return bids;
 };
