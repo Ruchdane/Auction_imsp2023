@@ -6,6 +6,7 @@ import { Modal, ModalBody, ModalTriger } from "../../../ui/modal";
 import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import CreateItem from "../../../form/createitem";
+import UpdateItem from "../form/update";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -21,19 +22,19 @@ export const columns: ColumnDef<Item>[] = [
     cell: ({ row }) => <span>{row.getValue("name")}</span>,
   },
   {
-    id: "price",
-    accessorKey: "price",
+    id: "initial_price",
+    accessorKey: "initial_price",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Prix" />
     ),
     enableColumnFilter: false,
     enableSorting: true,
     enableHiding: true,
-    cell: ({ row }) => <span>{row.getValue("price")}</span>,
+    cell: ({ row }) => <span>{row.getValue("initial_price")}</span>,
   },
   {
-    id: "count",
-    accessorKey: "count",
+    id: "quantity",
+    accessorKey: "quantity",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Quantité" />
     ),
@@ -41,7 +42,7 @@ export const columns: ColumnDef<Item>[] = [
     enableColumnFilter: true,
     enableSorting: true,
     enableHiding: true,
-    cell: ({ row }) => <span>{row.getValue("count")}</span>,
+    cell: ({ row }) => <span>{row.getValue("quantity")}</span>,
   },
   {
     header: "Actions",
@@ -52,12 +53,11 @@ export const columns: ColumnDef<Item>[] = [
         accessorFn: (row) => row,
         cell(row) {
           const [isModalOpen, setIsModalOpen] = useState(false);
-          let a = row.getValue();
           return (
             <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
               <ModalTriger label="Metre a jour" icon={<Pencil size={24} />} />
               <ModalBody title="" isOpen={isModalOpen}>
-                <CreateItem />
+                <UpdateItem item={row.getValue()} />
               </ModalBody>
             </Modal>
           );
