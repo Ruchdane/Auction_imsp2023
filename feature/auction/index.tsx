@@ -86,7 +86,7 @@ export const useAuctionHighBid = (auctionId: string) => {
 };
 
 export function getAllAuction() {
-  return Array.from(Array(100), (_, i) => i);
+  return Array.from(Array(100), (_, i) => i.toString());
 }
 
 export function useActiveAuctions() {
