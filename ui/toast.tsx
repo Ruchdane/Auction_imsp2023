@@ -44,8 +44,6 @@ const Toast = React.forwardRef<
 >(({ className, variant, ...props }, ref) => {
   const backgroundColor =
     variant === "destructive" ? "bg-red-500" : "bg-green-500";
-  console.log("variant:", variant);
-  console.log("backgroundColor:", backgroundColor);
   return (
     <ToastPrimitives.Root
       ref={ref}

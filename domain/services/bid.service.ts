@@ -21,6 +21,8 @@ import { MakeBidDto } from "../dto/makeBid.dto";
 import { BidAgainDto } from "../dto/bidAgain.dto";
 import { Bid } from "../types/bid";
 import { User } from "../types/user";
+import { Auction, StatusAuction } from "../types/auction";
+import { Item } from "../types/items";
 
 class BidService {
   async makeBid(
@@ -31,6 +33,27 @@ class BidService {
       const auctionSnapshot = await getDoc(auctionRef);
 
       if (auctionSnapshot.exists()) {
+        const auctionData = auctionSnapshot.data() as Auction;
+        if (auctionData.status==StatusAuction.CLOSE)
+          return {
+            success: false,
+            message:
+              "L'enhère est déjà terminé vous ne pouvez plus faire d'offre.",
+          };
+        const itemRef = doc(firestoreApp, "items", auctionData.itemId);
+        const itemSnapshot = await getDoc(itemRef);
+        if (!itemSnapshot.exists())
+          return { success: false, message: "Artcile introuvable" };
+
+        const itemData = itemSnapshot.data() as Item;
+
+        if (itemData.initial_price > dto.amount)
+          return {
+            success: false,
+            message:
+              "Le montant de l'offre doit être supérieur au prix de départ de l'article.",
+          };
+
         const bidCollectionRef = collection(firestoreApp, "bids");
 
         const existingBidQuery = query(
@@ -43,7 +66,7 @@ class BidService {
         if (!existingBidSnapshot.empty) {
           return {
             success: false,
-            message: "You already have a bid for this auction",
+            message: "Vous avez déjà une offre pour cette enchère.",
           };
         }
 
@@ -57,7 +80,7 @@ class BidService {
 
         return { success: true, data: newBidRef.id };
       } else {
-        return { success: false, message: "Auction not found" };
+        return { success: false, message: "Enchère introuvable." };
       }
     } catch (error) {
       console.log("Error making the bid:", error);
@@ -84,7 +107,7 @@ class BidService {
         });
         return { success: true, data: null };
       } else {
-        return { success: false, message: "Bid not found" };
+        return { success: false, message: "Offre introuvable" };
       }
     } catch (error) {
       console.log("Error updating the bid:", error);
@@ -134,7 +157,7 @@ class BidService {
           data: { id: bidSnapshot.id, ...bidData } as Bid,
         };
       } else {
-        return { success: false, message: "Auction not found" };
+        return { success: false, message: "Enchère introuvable" };
       }
     } catch (error) {
       console.log("Error retriving the bid:", error);
@@ -227,7 +250,6 @@ class BidService {
       usersSnapshot.forEach((userDoc) => {
         users.push({ id: userDoc.id, ...userDoc.data() } as User);
       });
-      console.log("users:", users);
       const bidsWithBidders: Bid[] = bids.map((bid) => {
         const bidderId = bid.bidderId;
         const bidder = users.find((user) => user.id === bidderId);

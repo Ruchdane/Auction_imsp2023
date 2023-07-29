@@ -21,6 +21,7 @@ import {
   ErrorResponse,
 } from "../interfaces/response.interface";
 import { Item, StatusItem } from "../types/items";
+import bidService from "./bid.service";
 class AuctionService {
   async createAuction(
     dto: CreateAuctionDto,
@@ -94,10 +95,10 @@ class AuctionService {
             data: { id: auctionSnapshot.id, ...result } as Auction,
           };
         } else {
-          return { success: false, message: "Item not found." };
+          return { success: false, message: "Article introuvable." };
         }
       } else {
-        return { success: false, message: "Auction not found." };
+        return { success: false, message: "Enchère introuvable." };
       }
     } catch (error) {
       console.log("Error retrieving auction:", error);
@@ -117,13 +118,28 @@ class AuctionService {
       } else {
         return result;
       }
-
       if (auctionData.status === StatusAuction.OPEN) {
-        await updateDoc(auctionRef, { status: StatusAuction.CLOSE });
+        const response = await bidService.getBidsAuction(dto.auctionId);
+        if (response.success) {
+          const bids = response.data;
 
-        return { success: true, data: null };
+          if (bids.length == 0) {
+            const responseRestart = await this.restartAuction(dto.auctionId);
+            return responseRestart;
+          } else {
+            bids.sort((a, b) => b.amount - a.amount);
+            const highestBid = bids[0];
+            const itemRef = doc(firestoreApp, "items", auctionData.itemId);
+            await updateDoc(auctionRef, { status: StatusAuction.CLOSE , winner:highestBid.bidder.name});
+            await updateDoc(itemRef, { status: StatusItem.SOLD, sold_price:highestBid.amount });
+
+            return { success: true, data: null };
+          }
+        } else {
+          return response;
+        }
       } else {
-        return { success: false, message: "The auction is already closed." };
+        return { success: false, message: "L'enchère est déjà fermée." };
       }
     } catch (error) {
       console.log("Error ending the auction :", error);
@@ -179,7 +195,7 @@ class AuctionService {
     }
   }
 
-  async restartAuction(
+  private async restartAuction(
     auctionId: string,
   ): Promise<SuccessResponse<null> | ErrorResponse> {
     try {

@@ -5,6 +5,7 @@ import { useState } from "react";
 import MakeBid from "../../form/makebid";
 import useAuction, {
   useAuctionHighBid,
+  useEndAuction,
   useHigtestBid,
   useMyAmount,
   useTimeRemaining,
@@ -20,6 +21,8 @@ export default function AuctionCard({ data }: { data: Auction }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const high = useHigtestBid(data.id);
   const timeRemaining = useTimeRemaining(data.endDate);
+  
+  useEndAuction(timeRemaining,data.id);
 
   return (
     <Card>

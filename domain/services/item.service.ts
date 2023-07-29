@@ -27,6 +27,7 @@ class ItemService {
       const itemData = {
         ...dto,
         status: StatusItem.AVAILABLE,
+        sold_price:""
       };
       const itemCollectionRef = collection(firestoreApp, `items`);
 
@@ -41,7 +42,7 @@ class ItemService {
       if (!existingItemSnapshot.empty) {
         return {
           success: false,
-          message: "Item with name already exist in stock",
+          message: "Cet article est déjà dans le stock",
         };
       }
       const itemRef = await addDoc(itemCollectionRef, itemData);
@@ -66,7 +67,7 @@ class ItemService {
           data: { id: itemSnapshot.id, ...itemData } as Item,
         };
       } else {
-        return { success: false, message: "Item not found." };
+        return { success: false, message: "Article introuvable." };
       }
     } catch (error) {
       console.log("Error retrieving the item:", error);
@@ -112,7 +113,7 @@ class ItemService {
       if (itemData.status === StatusItem.AUCTION) {
         return {
           success: false,
-          message: "The item is currently up for auction.",
+          message: "L'article est actuellement en plein enchère .",
         };
       }
       await deleteDoc(itemRef);

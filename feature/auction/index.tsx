@@ -66,6 +66,36 @@ export const useHigtestBid = (auctionId: string): number => {
 
   return high;
 };
+
+export const useEndAuction = (timeRemaining: string, auctionId: string) => {
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (timeRemaining === "00:00:000") {
+      const fetchEndAuction = async () => {
+        const response = await auctionService.endAuction({ auctionId });
+        if (response.success) {
+          // toast({
+          //   title: "Success",
+          //   description: "Auction updated successfully",
+          //   variant: "default",
+          // });
+          console.log("endAuction or restartAuction");
+          
+        } else {
+          // Afficher un toast en cas d'erreur lors de la récupération de l'enchère
+          toast({
+            title: "Error",
+            description: response.message,
+            variant: "destructive",
+          });
+        }
+      };
+      fetchEndAuction();
+    }
+  }, [timeRemaining]);
+};
+
 // Pour récupérer les 5 premières offres
 export const useAuctionHighBid = (auctionId: string) => {
   const [bids, setBids] = useState<Bid[]>([]);

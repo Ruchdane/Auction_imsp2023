@@ -33,7 +33,7 @@ class AuthService {
       const existingUserSnapshot = await getDocs(existingUserQuery);
 
       if (!existingUserSnapshot.empty) {
-        return { success: false, message: "You name is already taken" };
+        return { success: false, message: "Ce nom est déjà utilisé." };
       }
 
       const { user } = await AuthFirebase.createUserWithEmailAndPassword(
@@ -130,7 +130,7 @@ class AuthService {
           data: { id: userQuerySnapshot.docs[0].id, ...userData } as User,
         };
       } else {
-        throw new Error("User not found.");
+        throw new Error("Utilisateur introuvable.");
       }
     } catch (error) {
       console.log("Error during getUser", error);

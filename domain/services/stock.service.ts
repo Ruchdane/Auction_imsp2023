@@ -38,7 +38,7 @@ class StockService {
       const userSnapshot = await getDoc(userRef);
 
       if (!userSnapshot.exists()) {
-        return { success: false, message: "User not found." };
+        return { success: false, message: "Utilisateur introuvable." };
       }
 
       const userData = userSnapshot.data() as User;
@@ -47,7 +47,7 @@ class StockService {
       const stockSnapshot = await getDoc(stockRef);
 
       if (!stockSnapshot.exists()) {
-        return { success: false, message: "Stock not found." };
+        return { success: false, message: "Stock introuvable." };
       }
 
       // Retrieve the items of the stock
