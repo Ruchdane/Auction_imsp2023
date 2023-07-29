@@ -6,6 +6,8 @@ import {
 } from "../ui/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ThemeSwitcher } from "../feature/theme";
+import { AuthContext } from "../feature/auction/context";
+import { useContext } from "react";
 export function Navbar() {
   return (
     <Navigation className="w-full flex justify-between items-center list-none px-8 py-2">
@@ -31,8 +33,11 @@ export function Navbar() {
   );
 }
 function useUser() {
+  const authContext = useContext(AuthContext);
+  const user = authContext?.user;
+  console.log("user:", user);
   return {
-    name: "John Doe",
+    name: user?.name,
     img: "https://api.dicebear.com/6.x/thumbs/svg", //some imageLink
   };
 }

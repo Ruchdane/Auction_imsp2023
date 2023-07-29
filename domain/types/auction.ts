@@ -11,5 +11,6 @@ export type Auction = {
   endDate: any;
   item: Item;
   itemId: string;
+  winner: string;
   status: StatusAuction;
 };

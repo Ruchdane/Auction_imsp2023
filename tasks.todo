@@ -1,18 +1,16 @@
-☐ Implémenter le système la relance d'une enchère lorsque le temps est écoulé
-☐ Implémenter le mécanisme de fermerture de l'enchère par le propriétaire lorsque aucune offre n'est faite
-☐ Régler le problème d'image chargé d'un item
-☐ Effectuer une vérification lorsque l'on crée une enchère pour s'assurer qu'il n'y aucune enchère existante
-en cours pour cet item
-☐ Implémenter le processus du choix du gagnant 
-☐ Notifier les participants d'une enchère et le propriétaire à la fin de l'enchère
-☐ Changer le statut d'un item après sa vente
-☐ Récupérer que les items en enchères et ceux disponible dans le stock d'un utilisateur
-☐ Obliger un utilisateur à se connecter si il veut effectuer les opérations (faire une offre, 
-réenchérir une offre, actions du stock )
-☐ Implémenter le mécanisme de désinscription et de déconnexion d'un utilisateur final
-☐ Implémenter l'intégration des utilisateurs
+New Features :
+    ☐ @high Implémenter le système de relance d'une enchère lorsque le temps est écoulé
+    ☐ @high Implémenter le mécanisme de fermerture de l'enchère par le propriétaire lorsque aucune offre n'est faite
+    ✔ @critical Charger l'image d'un item sur firebase @done (28/07/2023 23:34:50)
+    ☐ @critical Implémenter le processus du choix du gagnant 
+    ☐ @critical Notifier les participants d'une enchère et le propriétaire à la fin de l'enchère
+    ☐ @high Changer le statut d'un item après sa vente
+    ☐ @low Obliger un utilisateur à se connecter si il veut effectuer les opérations (actions offre, actions du stock )
+    ☐ @low Implémenter le mécanisme de désinscription et de déconnexion d'un utilisateur final
+    ☐ @critical Implémenter l'intégration des utilisateurs
 
-
-
-
-☐ Vérifier tous les where("id", "in") de firebase
+Fix :
+    ☐ @low Vérifier tous les where("id", "in") de firebase
+    ✔ @today Récupérer que les items en enchères et ceux disponible dans le stock d'un utilisateur @done (28/07/2023 22:07:18)
+    ✔ @today Effectuer une vérification lorsque l'on crée une enchère pour s'assurer qu'il n'y aucune enchère existante  pour cet item @done (28/07/2023 23:16:01)
+    ☐ @low Afficher les erreurs dans la console 

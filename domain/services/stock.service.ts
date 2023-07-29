@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { User } from "../types/user";
-import { Item } from "../types/items";
+import { Item, StatusItem } from "../types/items";
 import {
   ErrorResponse,
   SuccessResponse,
@@ -55,6 +55,7 @@ class StockService {
       const itemsQuery = query(
         itemCollectionRef,
         where("stockId", "==", userData.stockId),
+        where("status", "in", [StatusItem.AUCTION, StatusItem.AVAILABLE]),
       );
       const itemsSnapshot = await getDocs(itemsQuery);
 

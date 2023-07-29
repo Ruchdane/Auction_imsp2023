@@ -54,8 +54,13 @@ class AuthService {
         dto.email,
         dto.password,
       );
-      const loggedInUser = await this.getUser(user.uid);
-      return { success: true, data: loggedInUser };
+
+      const response = await this.getUser(user.uid);
+      if (response.success) {
+        return { success: true, data: response.data };
+      } else {
+        return response;
+      }
     } catch (error) {
       console.log("Error during login:", error);
       return { success: false, message: "Error during login." };
@@ -108,7 +113,9 @@ class AuthService {
     }
   }
 
-  private async getUser(uid: string): Promise<User> {
+  public async getUser(
+    uid: string,
+  ): Promise<SuccessResponse<User> | ErrorResponse> {
     try {
       const userCollectionRef = collection(firestoreApp, "users");
       const q = query(userCollectionRef, where("uid", "==", uid));
@@ -117,9 +124,10 @@ class AuthService {
       if (!userQuerySnapshot.empty) {
         const userData = userQuerySnapshot.docs[0].data();
         //@ts-ignore
+
         return {
-          id: userQuerySnapshot.docs[0].id,
-          ...userData,
+          success: true,
+          data: { id: userQuerySnapshot.docs[0].id, ...userData } as User,
         };
       } else {
         throw new Error("User not found.");

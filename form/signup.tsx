@@ -39,11 +39,13 @@ function Signup() {
       toast({
         title: "Success",
         description: `Connexion réussie`,
+        variant: "default",
       });
     } else {
       toast({
         title: "Error",
         description: `${response.message}`,
+        variant: "destructive",
       });
     }
     setIsloading(false);

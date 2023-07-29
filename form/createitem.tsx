@@ -7,6 +7,8 @@ import { useToast } from "../ui/use-toast";
 import { AddItemDto } from "../domain/dto/addItem.dto";
 import { Textarea } from "../ui/textarea";
 import itemService from "../domain/services/item.service";
+import { storageApp } from "../domain/firebase/config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 function CreateItem() {
   const { toast } = useToast();
@@ -44,31 +46,62 @@ function CreateItem() {
   async function handleSubmit(e: any): Promise<void> {
     e.preventDefault();
     setIsloading(() => true);
+    if (imageField) {
+      if (!imageField.type.startsWith("image/")) {
+        toast({
+          title: "Error",
+          description: "Le fichier sélectionné n'est pas une image.",
+          variant: "destructive",
+        });
+        setIsloading(false);
+        return;
+      }
 
-    const dto: AddItemDto = {
-      stockId: "ALC9DaaxLNx72nQbChyr",
-      name: nameField,
-      initial_price: priceField,
-      quantity: quantityField,
-      description: descriptionField,
-      imgUrl: "None",
-      category: categoryType[categoryIndex ?? 0],
-    };
+      try {
+        const storageRef = ref(storageApp, `${Date.now()}_${imageField.name}`);
+        await uploadBytes(storageRef, imageField);
 
-    // Make an API call to the backend to create the item
-    const response = await itemService.createItem(dto);
+        const imageUrl = await getDownloadURL(storageRef);
 
-    if (response.success) {
-      toast({
-        title: "Success",
-        description: `L'article a été ajouté avec succès!`,
-      });
+        const dto: AddItemDto = {
+          stockId: "ALC9DaaxLNx72nQbChyr",
+          name: nameField,
+          initial_price: priceField,
+          quantity: quantityField,
+          description: descriptionField,
+          imgUrl: imageUrl,
+          category: categoryType[categoryIndex ?? 0],
+        };
+        const response = await itemService.createItem(dto);
+
+        if (response.success) {
+          toast({
+            title: "Success",
+            description: `L'article a été ajouté avec succès!`,
+            variant: "default",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: `${response.message}`,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Une erreur est survenue lors de l'upload de l'image.",
+          variant: "destructive",
+        });
+      }
     } else {
       toast({
         title: "Error",
-        description: `${response.message}`,
+        description: "Veuillez choisir une image.",
+        variant: "destructive",
       });
     }
+
     setIsloading(false);
   }
 

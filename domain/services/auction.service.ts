@@ -26,6 +26,21 @@ class AuctionService {
     dto: CreateAuctionDto,
   ): Promise<SuccessResponse<string> | ErrorResponse> {
     try {
+      const auctionCollectionRef = collection(firestoreApp, "auctions");
+      const existingAuctionQuery = query(
+        auctionCollectionRef,
+        where("itemId", "==", dto.itemId),
+        where("status", "==", StatusAuction.OPEN),
+      );
+
+      const existingAuctionSnapshot = await getDocs(existingAuctionQuery);
+
+      if (!existingAuctionSnapshot.empty) {
+        return {
+          success: false,
+          message: "Il existe déjà une enchère en cours pour cet article.",
+        };
+      }
       const now = Timestamp.now();
       const startDate = now;
       const date = new Date(startDate.seconds * 1000);
@@ -35,11 +50,11 @@ class AuctionService {
       const newAuctionData = {
         ...dto,
         status: StatusAuction.OPEN,
+        winner: "",
         startDate,
         endDate,
       };
 
-      const auctionCollectionRef = collection(firestoreApp, "auctions");
       const newAuctionRef = await addDoc(auctionCollectionRef, newAuctionData);
 
       const result = await itemService.setStatus(
@@ -161,6 +176,25 @@ class AuctionService {
     } catch (error) {
       console.log("Error retrieving active auctions :", error);
       return { success: false, message: "Error retrieving active auctions." };
+    }
+  }
+
+  async restartAuction(
+    auctionId: string,
+  ): Promise<SuccessResponse<null> | ErrorResponse> {
+    try {
+      const itemRef = doc(firestoreApp, `auctions/${auctionId}`);
+      const now = Timestamp.now();
+      const startDate = now;
+      const date = new Date(startDate.seconds * 1000);
+      date.setMinutes(date.getMinutes() + 5);
+      const endDate = Timestamp.fromDate(date);
+
+      await updateDoc(itemRef, { startDate, endDate });
+      return { success: true, data: null };
+    } catch (error) {
+      console.log("Error restarting the auction:", error);
+      return { success: false, message: "Error restarting the auction." };
     }
   }
 

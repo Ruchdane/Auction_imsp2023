@@ -71,11 +71,13 @@ function CreateAuction() {
       toast({
         title: "Success",
         description: "L'enchère a été créée avec succès!",
+        variant: "default",
       });
     } else {
       toast({
         title: "Error",
         description: response.message,
+        variant: "destructive",
       });
     }
     setIsloading(false);

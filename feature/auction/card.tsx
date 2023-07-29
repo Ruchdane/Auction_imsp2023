@@ -29,9 +29,9 @@ export default function AuctionCard({ data }: { data: Auction }) {
       <CardContent>
         <img
           src={data.item.imgUrl}
-          width="200"
-          height="200"
+          style={{ width: "200px", height: "200px" }}
           className="bg-contrast"
+          alt={data.item.name}
         />
         <p> Temps restant : {timeRemaining}</p>
         <p> Plus Offrant : {high} XOF</p>
@@ -70,7 +70,7 @@ export default function AuctionCard({ data }: { data: Auction }) {
 export function BidsCard({ auctionId }: AuctionCardProps) {
   const auction: Auction | null = useAuction(auctionId);
   const high_bids: Bid[] = useAuctionHighBid(auctionId);
-  console.log('high_bids:', high_bids)
+  console.log("high_bids:", high_bids);
 
   // const timeRemaining = useTimeRemaining(auction?.endDate);
 

@@ -20,6 +20,7 @@ export const useAuction = (auctionId: string): Auction | null => {
         toast({
           title: "Error",
           description: response.message,
+          variant: "destructive",
         });
       }
     };

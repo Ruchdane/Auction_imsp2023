@@ -31,11 +31,14 @@ function Login() {
       toast({
         title: "Success",
         description: `Connexion réussie`,
+        variant: "default",
       });
+      window.location.href = "/";
     } else {
       toast({
         title: "Error",
         description: `${response.message}`,
+        variant: "destructive",
       });
     }
     setIsloading(false);
