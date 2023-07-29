@@ -1,13 +1,17 @@
 import { Plus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import { Card, CardContent } from "../../ui/card";
 import { Modal, ModalBody, ModalTriger } from "../../ui/modal";
 import { useState } from "react";
 import CreateAuction from "../../form/createauction";
-import ActiveAuctions from "./activeAuctions";
 import { BidsCard } from "../../feature/auction/card";
+import { useActiveAuctions } from "../../feature/auction";
+import List from "../../ui/list";
+import { Auction } from "../../domain/types/auction";
 
 export default function MyAuctions() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const activeAuctions = useActiveAuctions();
+  const [activeAuction, setActiveAuction] = useState<Auction | null>(null);
   return (
     <>
       <div className="flex justify-between">
@@ -21,12 +25,16 @@ export default function MyAuctions() {
       </div>
       <div className="grid grid-cols-3 items-center justify-center gap-4 pt-8">
         <Card className="w-fit h-fit">
-          <CardHeader className="flex justify-between item-center gap-4"></CardHeader>
           <CardContent>
-            <ActiveAuctions />
+            <List
+              setActiveElement={setActiveAuction}
+              activeElement={activeAuction}
+              elements={activeAuctions}
+              display={({ element }) => <>Ventes De {element.item.name}</>}
+            />
           </CardContent>
         </Card>
-        <BidsCard auctionId={"Xh0W92dPTvUZ6NCRkaCg"} />
+        {activeAuction && <BidsCard auctionId={activeAuction.id} />}
       </div>
     </>
   );
