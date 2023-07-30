@@ -8,6 +8,8 @@ New Features :
     ☐ @low Obliger un utilisateur à se connecter si il veut effectuer les opérations (actions offre, actions du stock )
     ☐ @low Implémenter le mécanisme de désinscription et de déconnexion d'un utilisateur final
     ☐ @critical Implémenter l'intégration des utilisateurs
+    ☐ @low Ajouter les catégories
+    ☐ @high Vérifier que c'est un utilisateur autre que le seller qui veut faire une offre sur son enchère
 
 Fix :
     ☐ @low Vérifier tous les where("id", "in") de firebase

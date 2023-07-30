@@ -8,7 +8,7 @@ import { UpdateItemDto } from "../../../domain/dto/updateItem.dto";
 import { Textarea } from "../../../ui/textarea";
 import itemService from "../../../domain/services/item.service";
 import { Item } from "../../../domain/types/items";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storageApp } from "../../../domain/firebase/config";
 
 interface itemObj {
@@ -59,6 +59,8 @@ function UpdateItem(props: itemObj) {
     e.preventDefault();
     setIsloading(() => true);
     let imageUrl: string | null = null;
+    let previousImageUrl: string | null = null;
+
     if (imageField) {
       if (!imageField.type.startsWith("image/")) {
         toast({
@@ -96,7 +98,10 @@ function UpdateItem(props: itemObj) {
       imgUrl: imageUrl ? imageUrl : props.item.imgUrl,
     };
 
-    // Make an API call to the backend to create the item
+    // Vérifier si l'article avait déjà une image avant la mise à jour
+    if (props.item.imgUrl && imageUrl !== props.item.imgUrl) {
+      previousImageUrl = props.item.imgUrl;
+    }
 
     const response = await itemService.updateItem(dto);
     if (response.success) {
@@ -110,6 +115,22 @@ function UpdateItem(props: itemObj) {
       props.item.quantity = quantityField;
       props.item.description = descriptionField;
       props.item.category = categoryType[categoryIndex ?? 0];
+
+      // Supprimer l'ancienne image de Firebase Storage (si elle existe)
+      if (previousImageUrl) {
+        const storageRef = ref(storageApp, previousImageUrl);
+        try {
+          await deleteObject(storageRef);
+        } catch (error) {
+          console.error(error);
+          toast({
+            title: "Error",
+            description:
+              "Une erreur est survenue lors de la suppression de l'ancienne image.",
+            variant: "destructive",
+          });
+        }
+      }
     } else {
       toast({
         title: "Error",
