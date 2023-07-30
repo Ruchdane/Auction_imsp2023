@@ -4,7 +4,7 @@ import { Label } from "../../../ui/label";
 import { Input } from "../../../ui/input";
 import { ComboBox } from "../../../ui/combobox";
 import { useToast } from "../../../ui/use-toast";
-import { AddItemDto } from "../../../domain/dto/addItem.dto";
+import { UpdateItemDto } from "../../../domain/dto/updateItem.dto";
 import { Textarea } from "../../../ui/textarea";
 import itemService from "../../../domain/services/item.service";
 import { Item } from "../../../domain/types/items";
@@ -67,18 +67,19 @@ function UpdateItem(props: itemObj) {
     e.preventDefault();
     setIsloading(() => true);
 
-    const dto:AddItemDto= {
-      stockId:"ALC9DaaxLNx72nQbChyr",
-      name: nameField,
-      initial_price: priceField,
-      quantity: quantityField,
-      description: descriptionField,
-      imgUrl: "None",
-      category: categoryType[categoryIndex ?? 0],
+    const dto:UpdateItemDto= {
+      itemId: props.item.id,
+    name: props.item.name,
+    stockId: props.item.stockId,
+    quantity:(props.item.quantity).toString(),
+    category: props.item.category,
+    description: props.item.description,
+    initial_price: props.item.initial_price,
+    imgUrl: props.item.imgUrl
     };
 
     // Make an API call to the backend to create the item
-    const response = await itemService.createItem(dto);
+    const response = await itemService.updateItem(dto);
 
     if (response.success) {
       toast({
@@ -170,7 +171,7 @@ function UpdateItem(props: itemObj) {
         type="submit"
         className="w-80"
       >
-        Créer produit
+        Modifier
       </Button>
     </div>
   );
