@@ -436,7 +436,6 @@ class AuctionService {
       // Créez une requête pour récupérer les enchères associées aux ID récupérés
       const auctionsQuery = query(
         auctionsCollectionRef,
-        where("id", "in", auctionIds),
         where("status", "==", StatusAuction.OPEN),
       );
 
@@ -446,7 +445,9 @@ class AuctionService {
       // Convertissez les données snapshot en tableau d'objets Auction
 
       auctionsSnapshot.forEach((auctionDoc) => {
-        auctions.push({ id: auctionDoc.id, ...auctionDoc.data() } as Auction);
+        const auctionData = { id: auctionDoc.id, ...auctionDoc.data() } as Auction;
+        if (auctionIds.includes(auctionData.id))
+          auctions.push(auctionData);
       });
 
       const itemIds: string[] = auctions.map((it) => it.itemId);
@@ -504,8 +505,8 @@ class AuctionService {
   
       bidsSnapshot.forEach((bidDoc) => {
         bids.push({ id: bidDoc.id, ...bidDoc.data() } as Bid);
+        
       });
-  
       if (bids.length === 0) {
         // Si l'enchérisseur n'a pas d'offres, appeler le rappel avec des enchères vides et null pour l'erreur
         callback(auctions, null);
@@ -520,7 +521,6 @@ class AuctionService {
       // Créez une requête pour récupérer les enchères associées aux ID récupérés
       const auctionsQuery = query(
         auctionsCollectionRef,
-        where("id", "in", auctionIds),
         where("status", "==", StatusAuction.OPEN),
       );
   
@@ -528,9 +528,10 @@ class AuctionService {
       const auctionsSnapshot = await getDocs(auctionsQuery);
   
       auctionsSnapshot.forEach((auctionDoc) => {
-        auctions.push({ id: auctionDoc.id, ...auctionDoc.data() } as Auction);
+        const auctionData = { id: auctionDoc.id, ...auctionDoc.data() } as Auction;
+        if (auctionIds.includes(auctionData.id))
+          auctions.push(auctionData);
       });
-  
       const itemIds: string[] = auctions.map((it) => it.itemId);
       if (itemIds.length === 0) {
         // Si les enchères n'ont pas d'élément associé, appeler le rappel avec des enchères vides et null pour l'erreur
@@ -553,9 +554,9 @@ class AuctionService {
         result.item = itemDetails;
         return result;
       });
-  
       // Appeler le rappel avec les enchères mises à jour et null pour l'erreur
       callback(auctionsWithItem, null);
+      
     }, (error) => {
       // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
       callback([], "Erreur lors de l'écoute des enchères de l'enchérisseur : " + error.message);

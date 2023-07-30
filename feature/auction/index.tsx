@@ -228,6 +228,7 @@ export function useAuctionsBidder() {
       };
     }
   }, [user]);
+  
   return bidderAuctions;
 }
 

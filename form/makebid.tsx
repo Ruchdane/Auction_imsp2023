@@ -5,20 +5,21 @@ import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { MakeBidDto } from "../domain/dto/makeBid.dto";
 import bidService from "../domain/services/bid.service";
+import { useUser } from "../feature/auth";
 
 interface makeBidProps {
   auctionId: string;
-  bidderId: string;
 }
 
 function MakeBid(props: makeBidProps) {
   const { toast } = useToast();
   const [amountField, setAmountField] = useState(0);
-  const toastType = ["Error", "Warning", "Info"];
+
+  const user = useUser();
 
   const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
-    return amountField < 0 || props.bidderId === "8OJY14mamOUHY2nWKK0q";
+    return amountField < 0;
   }, [amountField]);
 
   async function handleSubmit(e: any): Promise<void> {
@@ -28,10 +29,9 @@ function MakeBid(props: makeBidProps) {
       const dto: MakeBidDto = {
         auctionId: props.auctionId,
         amount: amountField,
-        bidderId: props.bidderId,
+        bidderId: user ? user.id : "None",
       };
       const response = await bidService.makeBid(dto);
-
       if (response.success) {
         toast({
           title: "Success",
@@ -78,7 +78,7 @@ function MakeBid(props: makeBidProps) {
           type="submit"
           className="w-2/3"
         >
-          Make Bid
+          Enchérir
         </Button>
       </div>
     </div>

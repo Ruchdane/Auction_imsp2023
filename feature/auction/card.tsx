@@ -53,7 +53,7 @@ export default function AuctionCard({ data }: { data: Auction }) {
               }
             />
             <ModalBody title="" isOpen={isModalOpen}>
-              <MakeBid auctionId={data.id} bidderId="8OJY14mamOUHY2nWKK0q"/>
+              <MakeBid auctionId={data.id} />
             </ModalBody>
           </Modal>
           <Link to="/mes_encheres/detail" className="inline-flex">
@@ -112,28 +112,30 @@ export function BidsCard({ auction }: AuctionCardProps) {
 
 export function AuctionBidCard({ auction }: AuctionCardProps) {
   const high = useHigtestBid(auction.id);
-  const user = useUser()
-  const myAmount = useMyAmount(user ? user.id: "", auction.id);
+  const user = useUser();
+  const myAmount = useMyAmount(user ? user.id : "", auction.id);
   if (auction === null) return <> </>;
   // const timeRemaining = useTimeRemaining(auction.endDate);
   return (
-    <><Card>
-      <CardHeader className="flex justify-between item-center gap-4">
-        <div>
-          <p>
-            {" "}
-            Temps restant <br />
-
-          </p>
-        </div>
-        <div>
-          <p> Nom : {auction.item.name} XOF</p>
-          <p> Prix Minimum : {auction.item.initial_price} XOF</p>
-          <p> Quantité : {auction.item.quantity} </p>
-          <p> Plus Offrant : {high} XOF</p>
-          <p> Mon Offre Actuelle: {myAmount} XOF</p>
-        </div>
-      </CardHeader>
-    </Card><BidAgain /></>
+    <>
+      <Card>
+        <CardHeader className="flex justify-between item-center gap-4">
+          <div>
+            <p>
+              {" "}
+              Temps restant <br />
+            </p>
+          </div>
+          <div>
+            <p> Nom : {auction.item.name} XOF</p>
+            <p> Prix Minimum : {auction.item.initial_price} XOF</p>
+            <p> Quantité : {auction.item.quantity} </p>
+            <p> Plus Offrant : {high} XOF</p>
+            <p> Mon Offre Actuelle: {myAmount} XOF</p>
+          </div>
+        </CardHeader>
+      </Card>
+      <BidAgain />
+    </>
   );
 }

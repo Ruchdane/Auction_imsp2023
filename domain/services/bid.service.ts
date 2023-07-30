@@ -29,6 +29,11 @@ class BidService {
     dto: MakeBidDto,
   ): Promise<SuccessResponse<string> | ErrorResponse> {
     try {
+      const userRef = doc(firestoreApp, "users", dto.bidderId);
+      const userSnapshot = await getDoc(userRef);
+      if (!userSnapshot.exists()) {
+        return { success: false, message: "Utilisateur faisant l'offre introuvable." };
+      }
       const auctionRef = doc(firestoreApp, "auctions", dto.auctionId);
       const auctionSnapshot = await getDoc(auctionRef);
 

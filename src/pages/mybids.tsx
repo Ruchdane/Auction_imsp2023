@@ -1,9 +1,8 @@
 import { Card, CardContent } from "../../ui/card";
 import { useState } from "react";
-import BidAgain from "../../form/bidagain";
 import { AuctionBidCard } from "../../feature/auction/card";
 import List from "../../ui/list";
-import { getAllAuction, useAuctionsBidder } from "../../feature/auction";
+import { useAuctionsBidder } from "../../feature/auction";
 import { Auction } from "../../domain/types/auction";
 
 export default function MyBids() {
@@ -18,13 +17,12 @@ export default function MyBids() {
             setActiveElement={setbidderAuction}
             activeElement={bidderAuction}
             elements={bidderAuctions}
-            display={({ element }) => <>Ventes De {element}</>}
+            display={({ element }) => <>Ventes De {element.item.name}</>}
           />
         </CardContent>
       </Card>
       <div className="col-span-2">
         {bidderAuction && <AuctionBidCard auction={bidderAuction} />}
-       
       </div>
     </div>
   );
