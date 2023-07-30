@@ -2,54 +2,51 @@
 import { columns } from "./column";
 import { DataTableToolbar } from "./toolbar";
 import { DataTable } from "../../../ui/data-table";
-import { Stock } from "../../../domain/types/stock";
 import { useState, useEffect } from "react";
 import stockService from "../../../domain/services/stock.service";
 import { useToast } from "../../../ui/use-toast";
-//import { getAllProduct } from ".."
+import { Item } from "../../../domain/types/items";
 
-export function ProductDataTable() {
-  console.log("Component rendered");
-  //const data = getAllProduct();
+function useItemsStock(userId: string) {
+  const [items, setItems] = useState<Item[]>([]);
   const { toast } = useToast();
-  const [stock, setStock] = useState<Stock | null>(null);
-  const [userId, setUserId] = useState("8OJY14mamOUHY2nWKK0q");
-  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchStock = async () => {
-      try {
-        const response = await stockService.getStockUser(userId);
-        if (response.success) {
-          setStock(response.data);
-        } else {
-          // Handle error or show toast message
+    const unsubscribe = stockService.listenStockUser(
+      userId,
+      (updatedStock, error) => {
+        if (error) {
           toast({
             title: "Error",
-            description: "L'extraction des articles du stock a échoué.",
+            description: error,
+            variant: "destructive",
           });
+        } else {
+          setItems(updatedStock ? updatedStock.items : []);
+          console.log("updated items");
         }
-        console.log(data);
-      } catch (error) {
-        // Handle error or show toast message
-        console.error(error);
-        toast({
-          title: "Error",
-          description: "Erreur côté serveur",
-        });
-      }
+      },
+    );
+    return () => {
+      unsubscribe();
     };
-    fetchStock();
-  }, [toast]);
-
-  useEffect(() => {
-    if (stock && stock.items) {
-      setData(stock.items);
-      console.log(stock.items);
-    }
-  }, [stock]);
-
+  }, []);
+  return items;
+}
+export function ProductDataTable() {
+  const [userId, setUserId] = useState("8OJY14mamOUHY2nWKK0q");
+  const data = useItemsStock(userId);
   return (
     <DataTable columns={columns} data={data || []} Toolbar={DataTableToolbar} />
   );
 }
+// props.item.name = nameField;
+// props.item.initial_price = priceField;
+// props.item.quantity = quantityField;
+// props.item.description = descriptionField;
+// props.item.category = categoryType[categoryIndex ?? 0];
+// console.log("disabled :", (nameField === props.item.name &&
+//   priceField === props.item.initial_price &&
+//   quantityField === props.item.quantity &&
+//   descriptionField === props.item.description &&
+//   categoryType[categoryIndex ?? 0] === props.item.category));

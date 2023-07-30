@@ -43,7 +43,7 @@ class AuthService {
       const createdUser = await this.createUserWithName(user.uid, dto);
       return { success: true, data: createdUser };
     } catch (error) {
-      console.log("Error during signup:", error);
+      console.error("Error during signup:", error);
       return { success: false, message: "Error during signup." };
     }
   }
@@ -62,7 +62,7 @@ class AuthService {
         return response;
       }
     } catch (error) {
-      console.log("Error during login:", error);
+      console.error("Error during login:", error);
       return { success: false, message: "Error during login." };
     }
   }
@@ -72,7 +72,7 @@ class AuthService {
       await AuthFirebase.signOut();
       return { success: true, data: null };
     } catch (error) {
-      console.log("Error during logout:", error);
+      console.error("Error during logout:", error);
       return { success: false, message: "Error during logout." };
     }
   }
@@ -108,7 +108,7 @@ class AuthService {
         ...userData,
       };
     } catch (error) {
-      console.log("Error during createUserWithName", error);
+      console.error("Error during createUserWithName", error);
       throw error;
     }
   }
@@ -133,7 +133,7 @@ class AuthService {
         throw new Error("Utilisateur introuvable.");
       }
     } catch (error) {
-      console.log("Error during getUser", error);
+      console.error("Error during getUser", error);
       throw error;
     }
   }

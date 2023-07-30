@@ -14,7 +14,7 @@ const links: NavigationItemProps[] = [
     href: "/",
   },
   {
-    label: "Mes produit",
+    label: "Mes produits",
     href: "/mes_produits",
   },
   {

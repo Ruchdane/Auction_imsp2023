@@ -88,6 +88,8 @@ function CreateItem() {
           });
         }
       } catch (error) {
+        console.error(error);
+
         toast({
           title: "Error",
           description: "Une erreur est survenue lors de l'upload de l'image.",
@@ -107,7 +109,7 @@ function CreateItem() {
 
   return (
     <div className="text-primary flex flex-col justify-center items-center h-full gap-6 max-w-60">
-      <h2 className="text-3xl font-bold">Ajouter un produit</h2>
+      <h2 className="text-3xl font-bold">Ajouter un article</h2>
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4">
           <div>

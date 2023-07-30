@@ -16,7 +16,6 @@ export const useAuction = (auctionId: string): Auction | null => {
       if (response.success) {
         setAuction(response.data);
       } else {
-        // Afficher un toast en cas d'erreur lors de la récupération de l'enchère
         toast({
           title: "Error",
           description: response.message,
@@ -24,8 +23,6 @@ export const useAuction = (auctionId: string): Auction | null => {
         });
       }
     };
-
-    // Appeler la fonction pour récupérer l'enchère spécifiée
     fetchAuction();
   }, [auctionId, toast]);
 
@@ -35,13 +32,22 @@ export const useAuction = (auctionId: string): Auction | null => {
 // Pour récupérer mon offre actuelle
 export const useMyAmount = (userId: string, auctionId: string): number => {
   const [amount, setmyAmount] = useState<number>(0);
+  const { toast } = useToast();
 
   useEffect(() => {
     const unsubscribe = bidService.listenCurrentBidUser(
       userId,
       auctionId,
-      (myAmount) => {
-        setmyAmount(myAmount);
+      (myAmount, error) => {
+        if (error) {
+          toast({
+            title: "Error",
+            description: error,
+            variant: "destructive",
+          });
+        } else {
+          setmyAmount(myAmount);
+        }
       },
     );
     return () => {
@@ -54,11 +60,22 @@ export const useMyAmount = (userId: string, auctionId: string): number => {
 // Pour récupérer la 1ère offre
 export const useHigtestBid = (auctionId: string): number => {
   const [high, setHighBid] = useState<number>(0);
-
+  const { toast } = useToast();
   useEffect(() => {
-    const unsubscribe = bidService.listenHighestBid(auctionId, (high) => {
-      setHighBid(high);
-    });
+    const unsubscribe = bidService.listenHighestBid(
+      auctionId,
+      (high, error) => {
+        if (error) {
+          toast({
+            title: "Error",
+            description: error,
+            variant: "destructive",
+          });
+        } else {
+          setHighBid(high);
+        }
+      },
+    );
     return () => {
       unsubscribe();
     };
@@ -81,9 +98,7 @@ export const useEndAuction = (timeRemaining: string, auctionId: string) => {
           //   variant: "default",
           // });
           console.log("endAuction or restartAuction");
-          
         } else {
-          // Afficher un toast en cas d'erreur lors de la récupération de l'enchère
           toast({
             title: "Error",
             description: response.message,
@@ -99,14 +114,25 @@ export const useEndAuction = (timeRemaining: string, auctionId: string) => {
 // Pour récupérer les 5 premières offres
 export const useAuctionHighBid = (auctionId: string) => {
   const [bids, setBids] = useState<Bid[]>([]);
-
+  const { toast } = useToast();
   useEffect(() => {
-    const unsubscribe = bidService.listenBidsAuction(auctionId, (bids) => {
-      bids.sort((a, b) => b.amount - a.amount);
-      const highestBids = bids.slice(0, 5);
+    const unsubscribe = bidService.listenBidsAuction(
+      auctionId,
+      (bids, error) => {
+        if (error) {
+          toast({
+            title: "Error",
+            description: error,
+            variant: "destructive",
+          });
+        } else {
+          bids.sort((a, b) => b.amount - a.amount);
+          const highestBids = bids.slice(0, 5);
 
-      setBids(highestBids);
-    });
+          setBids(highestBids);
+        }
+      },
+    );
     return () => {
       unsubscribe();
     };
@@ -121,11 +147,20 @@ export function getAllAuction() {
 
 export function useActiveAuctions() {
   const [activeAuctions, setActiveAuctions] = useState<Auction[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const unsubscribe = auctionService.listenActiveAuctions(
-      (activeAuctions) => {
-        setActiveAuctions(activeAuctions);
+      (activeAuctions, error) => {
+        if (error) {
+          toast({
+            title: "Error",
+            description: error,
+            variant: "destructive",
+          });
+        } else {
+          setActiveAuctions(activeAuctions);
+        }
       },
     );
     return () => {
@@ -161,13 +196,11 @@ export function useTimeRemaining(endTimestamp: Timestamp | null): string {
   );
 
   useEffect(() => {
-    // Mettre à jour le temps restant toutes les 100 millisecondes (ou selon votre besoin)
+    // Mettre à jour le temps restant toutes les 100 millisecondes
     const interval = setInterval(() => {
       const remaining = getTimeRemaining(endDate);
       setTimeRemaining(formatTime(remaining));
     }, 100);
-
-    // Nettoyer l'intervalle lorsque le composant est démonté
     return () => {
       clearInterval(interval);
     };

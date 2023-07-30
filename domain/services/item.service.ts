@@ -27,7 +27,7 @@ class ItemService {
       const itemData = {
         ...dto,
         status: StatusItem.AVAILABLE,
-        sold_price:""
+        sold_price: "",
       };
       const itemCollectionRef = collection(firestoreApp, `items`);
 
@@ -48,7 +48,7 @@ class ItemService {
       const itemRef = await addDoc(itemCollectionRef, itemData);
       return { success: true, data: itemRef.id };
     } catch (error) {
-      console.log("Error creating the item:", error);
+      console.error("Error creating the item:", error);
       return { success: false, message: "Error creating the item." };
     }
   }
@@ -70,7 +70,7 @@ class ItemService {
         return { success: false, message: "Article introuvable." };
       }
     } catch (error) {
-      console.log("Error retrieving the item:", error);
+      console.error("Error retrieving the item:", error);
       return { success: false, message: "Error retrieving the item." };
     }
   }
@@ -84,7 +84,7 @@ class ItemService {
       await updateDoc(itemRef, { ...updateData });
       return { success: true, data: null };
     } catch (error) {
-      console.log("Error updating the item:", error);
+      console.error("Error updating the item:", error);
       return { success: false, message: "Error updating the item." };
     }
   }
@@ -98,7 +98,7 @@ class ItemService {
       await updateDoc(itemRef, { status });
       return { success: true, data: null };
     } catch (error) {
-      console.log("Error setting the item status:", error);
+      console.error("Error setting the item status:", error);
       return { success: false, message: "Error setting the item status." };
     }
   }
@@ -119,7 +119,7 @@ class ItemService {
       await deleteDoc(itemRef);
       return { success: true, data: null };
     } catch (error) {
-      console.log("Error deleting the item:", error);
+      console.error("Error deleting the item:", error);
       return { success: false, message: "Error deleting the item." };
     }
   }

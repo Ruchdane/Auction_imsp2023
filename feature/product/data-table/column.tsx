@@ -7,6 +7,7 @@ import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import CreateItem from "../../../form/createitem";
 import UpdateItem from "../form/update";
+import DeleteItem from "../form/delete";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -74,7 +75,7 @@ export const columns: ColumnDef<Item>[] = [
             <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
               <ModalTriger label="Supprimer" icon={<Trash size={24} />} />
               <ModalBody title="" isOpen={isModalOpen}>
-                <CreateItem />
+                <DeleteItem item={row.getValue()} />
               </ModalBody>
             </Modal>
           );

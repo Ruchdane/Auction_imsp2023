@@ -34,7 +34,7 @@ class BidService {
 
       if (auctionSnapshot.exists()) {
         const auctionData = auctionSnapshot.data() as Auction;
-        if (auctionData.status==StatusAuction.CLOSE)
+        if (auctionData.status == StatusAuction.CLOSE)
           return {
             success: false,
             message:
@@ -83,7 +83,7 @@ class BidService {
         return { success: false, message: "Enchère introuvable." };
       }
     } catch (error) {
-      console.log("Error making the bid:", error);
+      console.error("Error making the bid:", error);
       return { success: false, message: "Error making the bid." };
     }
   }
@@ -110,7 +110,7 @@ class BidService {
         return { success: false, message: "Offre introuvable" };
       }
     } catch (error) {
-      console.log("Error updating the bid:", error);
+      console.error("Error updating the bid:", error);
       return { success: false, message: "Error updating the bid." };
     }
   }
@@ -160,7 +160,7 @@ class BidService {
         return { success: false, message: "Enchère introuvable" };
       }
     } catch (error) {
-      console.log("Error retriving the bid:", error);
+      console.error("Error retriving the bid:", error);
       return { success: false, message: "Error retriving the bid." };
     }
   }
@@ -209,7 +209,7 @@ class BidService {
       });
       return { success: true, data: bidsWithBidders };
     } catch (error) {
-      console.log("Error retriving the bids of an Auction :", error);
+      console.error("Error retriving the bids of an Auction :", error);
       return {
         success: false,
         message: "Error retriving the bids of an Auction.",
@@ -219,7 +219,7 @@ class BidService {
 
   listenBidsAuction(
     auctionId: string,
-    callback: (bids: Bid[]) => void,
+    callback: (bids: Bid[], error: string | null) => void,
   ): () => void {
     const bidCollectionRef = collection(firestoreApp, "bids");
     const userCollectionRef = collection(firestoreApp, "users");
@@ -231,36 +231,47 @@ class BidService {
     );
 
     // Commencez à écouter les mises à jour en temps réel
-    const unsubscribe = onSnapshot(bidsQuery, async (snapshot) => {
-      const bids: Bid[] = [];
-      snapshot.forEach((bidDoc) => {
-        bids.push({ id: bidDoc.id, ...bidDoc.data() } as Bid);
-      });
+    const unsubscribe = onSnapshot(
+      bidsQuery,
+      async (snapshot) => {
+        const bids: Bid[] = [];
+        snapshot.forEach((bidDoc) => {
+          bids.push({ id: bidDoc.id, ...bidDoc.data() } as Bid);
+        });
 
-      const bidderIds: string[] = bids.map((it) => it.bidderId);
-      if (bidderIds.length === 0) {
-        callback([]);
-        return;
-      }
-      //const usersQuery = query(userCollectionRef, where("id", "in", bidderIds));
-      const usersSnapshot = await getDocs(userCollectionRef);
+        const bidderIds: string[] = bids.map((it) => it.bidderId);
+        if (bidderIds.length === 0) {
+          callback([], null);
+          return;
+        }
+        //const usersQuery = query(userCollectionRef, where("id", "in", bidderIds));
+        const usersSnapshot = await getDocs(userCollectionRef);
 
-      const users: User[] = [];
+        const users: User[] = [];
 
-      usersSnapshot.forEach((userDoc) => {
-        users.push({ id: userDoc.id, ...userDoc.data() } as User);
-      });
-      const bidsWithBidders: Bid[] = bids.map((bid) => {
-        const bidderId = bid.bidderId;
-        const bidder = users.find((user) => user.id === bidderId);
-        const bidderDetails = bidder ? bidder : ({} as User);
-        let result = bid;
-        result.bidder = bidderDetails;
-        return result;
-      });
+        usersSnapshot.forEach((userDoc) => {
+          users.push({ id: userDoc.id, ...userDoc.data() } as User);
+        });
+        const bidsWithBidders: Bid[] = bids.map((bid) => {
+          const bidderId = bid.bidderId;
+          const bidder = users.find((user) => user.id === bidderId);
+          const bidderDetails = bidder ? bidder : ({} as User);
+          let result = bid;
+          result.bidder = bidderDetails;
+          return result;
+        });
 
-      callback(bidsWithBidders);
-    });
+        callback(bidsWithBidders, null);
+      },
+      (error) => {
+        // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
+        console.error(
+          "Erreur lors de l'écoute des offres d'une enchère : " + error.message,
+        );
+
+        callback([], "L'extraction des offres d'une enchère a échoué ");
+      },
+    );
 
     // Retourner la fonction de désabonnement
     return () => unsubscribe();
@@ -285,10 +296,10 @@ class BidService {
 
       return { success: true, data: bids };
     } catch (error) {
-      console.log("Error retriving the bids of an User :", error);
+      console.error("Error retriving the bids of an User :", error);
       return {
         success: false,
-        message: "Error retriving the bids of an User.",
+        message: "L'extraction des offres d'un utilisateur a échoué.",
       };
     }
   }
@@ -318,17 +329,17 @@ class BidService {
 
       return { success: true, data: highestBid };
     } catch (error) {
-      console.log("Error retriving the higthest bids of an Auction :", error);
+      console.error("Error retriving the higthest bids of an Auction :", error);
       return {
         success: false,
-        message: "Error retriving the higthest bids of an Auction.",
+        message: "L'extraction de la plus grand offre d'une enchère a échoué",
       };
     }
   }
 
   listenHighestBid(
     auctionId: string,
-    callback: (highestBid: number) => void,
+    callback: (highestBid: number, error: string | null) => void,
   ): () => void {
     const bidCollectionRef = collection(firestoreApp, "bids");
 
@@ -339,17 +350,32 @@ class BidService {
     );
 
     // Commencez à écouter les mises à jour en temps réel
-    const unsubscribe = onSnapshot(bidsQuery, (snapshot) => {
-      let highestBid = 0;
-      snapshot.forEach((bidDoc) => {
-        const bidData = bidDoc.data() as Bid;
-        if (bidData.amount > highestBid) {
-          highestBid = bidData.amount;
-        }
-      });
+    const unsubscribe = onSnapshot(
+      bidsQuery,
+      (snapshot) => {
+        let highestBid = 0;
+        snapshot.forEach((bidDoc) => {
+          const bidData = bidDoc.data() as Bid;
+          if (bidData.amount > highestBid) {
+            highestBid = bidData.amount;
+          }
+        });
 
-      callback(highestBid);
-    });
+        callback(highestBid, null);
+      },
+      (error) => {
+        // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
+        console.error(
+          "Erreur lors de l'écoute de la plus grand offre d'une enchère : " +
+            error.message,
+        );
+
+        callback(
+          0,
+          "L'extraction de la plus grand offre d'une enchère a échoué.",
+        );
+      },
+    );
 
     // Retourner la fonction de désabonnement
     return () => unsubscribe();
@@ -381,13 +407,14 @@ class BidService {
         return { success: true, data: 0 };
       }
     } catch (error) {
-      console.log(
+      console.error(
         "Error retriving the current Bid of an User in an Auction:",
         error,
       );
       return {
         success: false,
-        message: "Error retriving the current Bid of an User in an Auction.",
+        message:
+          "L'extraction de l'offre actuelle d'un utilisateur d'une enchère a échoué.",
       };
     }
   }
@@ -395,7 +422,7 @@ class BidService {
   listenCurrentBidUser(
     userId: string,
     auctionId: string,
-    callback: (currentBid: number) => void,
+    callback: (currentBid: number, error: string | null) => void,
   ): () => void {
     const bidCollectionRef = collection(firestoreApp, "bids");
 
@@ -407,15 +434,30 @@ class BidService {
     );
 
     // Commencez à écouter les mises à jour en temps réel
-    const unsubscribe = onSnapshot(userBidQuery, (snapshot) => {
-      if (!snapshot.empty) {
-        const userBidData = snapshot.docs[0].data() as Bid;
-        callback(userBidData.amount);
-      } else {
-        // Aucune offre de l'utilisateur pour cette enchère
-        callback(0);
-      }
-    });
+    const unsubscribe = onSnapshot(
+      userBidQuery,
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const userBidData = snapshot.docs[0].data() as Bid;
+          callback(userBidData.amount, null);
+        } else {
+          // Aucune offre de l'utilisateur pour cette enchère
+          callback(0, null);
+        }
+      },
+      (error) => {
+        // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
+        console.error(
+          "Erreur lors l'écoute de l'offre actuelle d'un utilisateur d'une enchère : " +
+            error.message,
+        );
+
+        callback(
+          0,
+          "L'extraction de l'offre actuelle d'un utilisateur d'une enchère a échoué.",
+        );
+      },
+    );
 
     // Retourner la fonction de désabonnement
     return () => unsubscribe();

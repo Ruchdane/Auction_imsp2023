@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setUser(response.data);
         } else {
           setUser(null);
-          console.log("error login uid");
+          console.error("Error login uid");
         }
       } else {
         // L'utilisateur n'est pas connecté

@@ -69,8 +69,11 @@ class AuctionService {
       }
       return { success: true, data: newAuctionRef.id };
     } catch (error) {
-      console.log("Error creating the auction :", error);
-      return { success: false, message: "Error creating the auction." };
+      console.error("Error creating the auction :", error);
+      return {
+        success: false,
+        message: "La création de l'enchère a échouée.",
+      };
     }
   }
 
@@ -101,8 +104,11 @@ class AuctionService {
         return { success: false, message: "Enchère introuvable." };
       }
     } catch (error) {
-      console.log("Error retrieving auction:", error);
-      return { success: false, message: "Error retrieving auction." };
+      console.error("Error retrieving auction:", error);
+      return {
+        success: false,
+        message: "L'extraction des données de l'enchère a échoué.",
+      };
     }
   }
 
@@ -130,8 +136,14 @@ class AuctionService {
             bids.sort((a, b) => b.amount - a.amount);
             const highestBid = bids[0];
             const itemRef = doc(firestoreApp, "items", auctionData.itemId);
-            await updateDoc(auctionRef, { status: StatusAuction.CLOSE , winner:highestBid.bidder.name});
-            await updateDoc(itemRef, { status: StatusItem.SOLD, sold_price:highestBid.amount });
+            await updateDoc(auctionRef, {
+              status: StatusAuction.CLOSE,
+              winner: highestBid.bidder.name,
+            });
+            await updateDoc(itemRef, {
+              status: StatusItem.SOLD,
+              sold_price: highestBid.amount,
+            });
 
             return { success: true, data: null };
           }
@@ -142,8 +154,11 @@ class AuctionService {
         return { success: false, message: "L'enchère est déjà fermée." };
       }
     } catch (error) {
-      console.log("Error ending the auction :", error);
-      return { success: false, message: "Error ending the auction." };
+      console.error("Error ending the auction :", error);
+      return {
+        success: false,
+        message: "La fermerture de l'enchère a échouée.",
+      };
     }
   }
 
@@ -190,8 +205,11 @@ class AuctionService {
 
       return { success: true, data: auctionsWithAuctionders };
     } catch (error) {
-      console.log("Error retrieving active auctions :", error);
-      return { success: false, message: "Error retrieving active auctions." };
+      console.error("Error retrieving active auctions :", error);
+      return {
+        success: false,
+        message: "L'extraction des enchères actives a échoué.",
+      };
     }
   }
 
@@ -209,13 +227,13 @@ class AuctionService {
       await updateDoc(itemRef, { startDate, endDate });
       return { success: true, data: null };
     } catch (error) {
-      console.log("Error restarting the auction:", error);
-      return { success: false, message: "Error restarting the auction." };
+      console.error("Error restarting the auction:", error);
+      return { success: false, message: "La relance d'une enchère a échouée." };
     }
   }
 
   listenActiveAuctions(
-    callback: (activeAuctions: Auction[]) => void,
+    callback: (activeAuctions: Auction[], error: string | null) => void,
   ): () => void {
     const auctionCollectionRef = collection(firestoreApp, "auctions");
     const itemCollectionRef = collection(firestoreApp, "items");
@@ -225,38 +243,48 @@ class AuctionService {
     );
 
     // OnSnapshot écoute les mises à jour en temps réel
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
-      const activeAuctions: Auction[] = [];
+    const unsubscribe = onSnapshot(
+      q,
+      async (snapshot) => {
+        const activeAuctions: Auction[] = [];
 
-      snapshot.forEach((itemDoc) => {
-        activeAuctions.push({ id: itemDoc.id, ...itemDoc.data() } as Auction);
-        console.log("update");
-      });
-      const itemIds: string[] = activeAuctions.map((it) => it.itemId);
-      if (itemIds.length === 0) {
-        callback([]);
-        return;
-      }
+        snapshot.forEach((itemDoc) => {
+          activeAuctions.push({ id: itemDoc.id, ...itemDoc.data() } as Auction);
+        });
+        const itemIds: string[] = activeAuctions.map((it) => it.itemId);
+        if (itemIds.length === 0) {
+          callback([], null);
+          return;
+        }
 
-      const itemsSnapshot = await getDocs(itemCollectionRef);
+        const itemsSnapshot = await getDocs(itemCollectionRef);
 
-      const items: Item[] = [];
-      itemsSnapshot.forEach((itemDoc) => {
-        items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
-      });
+        const items: Item[] = [];
+        itemsSnapshot.forEach((itemDoc) => {
+          items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
+        });
 
-      const auctionsWithAuctionders: Auction[] = activeAuctions.map(
-        (auction) => {
-          const itemId = auction.itemId;
-          const item = items.find((it) => it.id === itemId);
-          const itemDetails = item ? item : ({} as Item);
-          let result = auction;
-          result.item = itemDetails;
-          return result;
-        },
-      );
-      callback(auctionsWithAuctionders);
-    });
+        const auctionsWithAuctionders: Auction[] = activeAuctions.map(
+          (auction) => {
+            const itemId = auction.itemId;
+            const item = items.find((it) => it.id === itemId);
+            const itemDetails = item ? item : ({} as Item);
+            let result = auction;
+            result.item = itemDetails;
+            return result;
+          },
+        );
+        callback(auctionsWithAuctionders, null);
+      },
+      (error) => {
+        // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
+        console.error(
+          "Erreur lors de l'écoute des enchères actives : " + error.message,
+        );
+
+        callback([], "L'extraction des enchères actives a échoué.");
+      },
+    );
 
     // Retourner une fonction pour se désabonner lorsqu'elle n'est plus nécessaire
     return () => unsubscribe();
@@ -282,15 +310,54 @@ class AuctionService {
 
       return { success: true, data: userAuctions };
     } catch (error) {
-      console.log(
+      console.error(
         "Error retrieving auctions associated with the seller:",
         error,
       );
       return {
         success: false,
-        message: "Error retrieving auctions associated with the seller.",
+        message: "L'extraction des enchères du vendeur a échoué.",
       };
     }
+  }
+
+  listenAuctionsFromSeller(
+    userId: string,
+    callback: (updatedAuctions: Auction[], error: string | null) => void,
+  ): () => void {
+    const auctionCollectionRef = collection(firestoreApp, "auctions");
+    const q = query(
+      auctionCollectionRef,
+      where("sellerId", "==", userId),
+      where("status", "==", StatusAuction.OPEN),
+    );
+
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot) => {
+        const updatedAuctions: Auction[] = [];
+
+        querySnapshot.forEach((itemDoc) => {
+          updatedAuctions.push({
+            id: itemDoc.id,
+            ...itemDoc.data(),
+          } as Auction);
+        });
+
+        callback(updatedAuctions, null);
+      },
+      (error) => {
+        // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
+        console.error(
+          "Erreur lors de l'écoute des enchères du vendeur : " + error.message,
+        );
+
+        callback([], "L'extraction des enchères du vendeur a échoué ");
+      },
+    );
+
+    // Retourner une fonction pour désabonner l'écoute en temps réel lorsque cela n'est plus nécessaire
+    return unsubscribe;
   }
 
   async getAuctionsFromBidder(
@@ -341,11 +408,14 @@ class AuctionService {
 
       return { success: true, data: auctions };
     } catch (error) {
-      console.log(
-        "Error retrieving auctions associated with the bidder.:",
+      console.error(
+        "Error retrieving auctions associated with the bidder:",
         error,
       );
-      throw error;
+      return {
+        success: false,
+        message: "L'extraction des enchères de l'enchérisseur a échoué.",
+      };
     }
   }
 }

@@ -50,7 +50,7 @@ function UpdateItem(props: itemObj) {
     descriptionField,
     categoryIndex,
     imageField,
-    props.item
+    props.item,
   ]);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -103,19 +103,18 @@ function UpdateItem(props: itemObj) {
       toast({
         title: "Success",
         description: `L'article a été ajouté avec succès!`,
-        variant:"default"
+        variant: "default",
       });
       props.item.name = nameField;
       props.item.initial_price = priceField;
       props.item.quantity = quantityField;
       props.item.description = descriptionField;
       props.item.category = categoryType[categoryIndex ?? 0];
-      
     } else {
       toast({
         title: "Error",
         description: `${response.message}`,
-        variant:"destructive"
+        variant: "destructive",
       });
     }
     setIsloading(false);

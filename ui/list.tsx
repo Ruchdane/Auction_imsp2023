@@ -12,7 +12,11 @@ export default function List<T>(props: ListProps<T>) {
     <ul className="flex flex-col">
       {props.elements.map((element, key) => (
         <li
-          className={cn("p-4 border-b border-contrast hover:bg-accent cursor-pointer", props.activeElement === element && "border-primary bg-primary hover:bg-primary")}
+          className={cn(
+            "p-4 border-b border-contrast hover:bg-accent cursor-pointer",
+            props.activeElement === element &&
+              "border-primary bg-primary hover:bg-primary",
+          )}
           key={key}
           onClick={(_) => props.setActiveElement(element)}
         >
