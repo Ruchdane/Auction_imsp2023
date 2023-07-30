@@ -3,13 +3,14 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { LoginDto } from "../domain/dto/login.dto";
-import AuthService from "../domain/services/auth.service";
 
+import { Link, useNavigate , } from "react-router-dom";
+import authService from "../domain/services/auth.service";
 function Login() {
   const { toast } = useToast();
   const [emailField, setEmailField] = useState("");
   const [passwordField, setPasswordField] = useState("");
-  const toastType = ["Error", "Warning", "Info"];
+  const navigate = useNavigate();
 
   const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
@@ -25,7 +26,7 @@ function Login() {
       password: passwordField,
     };
 
-    const response = await AuthService.login(dto);
+    const response = await authService.login(dto);
 
     if (response.success) {
       toast({
@@ -33,7 +34,7 @@ function Login() {
         description: `Connexion réussie`,
         variant: "default",
       });
-      window.location.href = "/";
+      navigate("/");
     } else {
       toast({
         title: "Error",
@@ -82,9 +83,7 @@ function Login() {
               </Button>
               <span>
                 Vous n'avez pas de compte ?{" "}
-                <a className="ml-2" href="/inscription">
-                  S'inscrire
-                </a>
+                <Link className="ml-2" to="/inscription">S'inscrire</Link>
               </span>
             </div>
           </div>

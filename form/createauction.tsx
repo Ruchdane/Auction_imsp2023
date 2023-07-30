@@ -6,42 +6,46 @@ import { CreateAuctionDto } from "../domain/dto/createAuction.dto";
 import AuctionService from "../domain/services/auction.service";
 import stockService from "../domain/services/stock.service";
 import { Stock } from "../domain/types/stock";
+import { useUser } from "../feature/auth";
 
 function CreateAuction() {
   const { toast } = useToast();
   const [itemIndex, setItemIndex] = useState<number | null>(null);
   const [stock, setStock] = useState<Stock | null>(null);
-  const toastType = ["Error", "Warning", "Info"];
   const [isLoading, setIsloading] = useState(false);
-  const [userId, setUserId] = useState("8OJY14mamOUHY2nWKK0q");
+  const user = useUser();
+  const userId = user ? user.id : "";
   const disabled = useMemo(() => {
     return itemIndex === null;
   }, [itemIndex]);
 
   useEffect(() => {
-    const fetchStock = async () => {
-      try {
-        const response = await stockService.getStockUser(userId);
-        if (response.success) {
-          setStock(response.data);
-        } else {
-          // Handle error or show toast message
+    
+    if (userId != "") {
+      
+      const fetchStock = async () => {
+        try {
+          const response = await stockService.getStockUser(userId);
+          if (response.success) {
+            setStock(response.data);
+          } else {
+            toast({
+              title: "Error",
+              description: "L'extraction des articles du stock a échoué.",
+              variant: "destructive",
+            });
+          }
+        } catch (error) {
+          console.error(error);
           toast({
             title: "Error",
-            description: "L'extraction des articles du stock a échoué.",
+            description: "Erreur côté serveur",
           });
         }
-      } catch (error) {
-        // Handle error or show toast message
-        console.error(error);
-        toast({
-          title: "Error",
-          description: "Erreur côté serveur",
-        });
-      }
-    };
-    fetchStock();
-  }, [toast]);
+      };
+      fetchStock();
+    }
+  }, [toast, userId]);
 
   async function handleSubmit(e: any): Promise<void> {
     e.preventDefault();

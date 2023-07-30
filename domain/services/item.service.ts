@@ -29,6 +29,15 @@ class ItemService {
         status: StatusItem.AVAILABLE,
         sold_price: "",
       };
+      const stockRef = doc(firestoreApp, "stocks", dto.stockId);
+      const stockSnapshot = await getDoc(stockRef);
+
+      if (!stockSnapshot.exists()) {
+        return {
+          success: false,
+          message: "Stock introuvable",
+        };
+      }
       const itemCollectionRef = collection(firestoreApp, `items`);
 
       const existingItemQuery = query(

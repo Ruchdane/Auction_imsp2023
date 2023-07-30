@@ -4,14 +4,14 @@ import { Modal, ModalBody, ModalTriger } from "../../ui/modal";
 import { useState } from "react";
 import CreateAuction from "../../form/createauction";
 import { BidsCard } from "../../feature/auction/card";
-import { useActiveAuctions } from "../../feature/auction";
+import { useAuctionsSeller } from "../../feature/auction";
 import List from "../../ui/list";
 import { Auction } from "../../domain/types/auction";
 
 export default function MyAuctions() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const activeAuctions = useActiveAuctions();
-  const [activeAuction, setActiveAuction] = useState<Auction | null>(null);
+  const sellerAuctions = useAuctionsSeller();
+  const [sellerAuction, setsellerAuction] = useState<Auction | null>(null);
   return (
     <>
       <div className="flex justify-between">
@@ -27,14 +27,14 @@ export default function MyAuctions() {
         <Card className="w-fit h-fit">
           <CardContent>
             <List
-              setActiveElement={setActiveAuction}
-              activeElement={activeAuction}
-              elements={activeAuctions}
+              setActiveElement={setsellerAuction}
+              activeElement={sellerAuction}
+              elements={sellerAuctions}
               display={({ element }) => <>Ventes De {element.item.name}</>}
             />
           </CardContent>
         </Card>
-        {activeAuction && <BidsCard auctionId={activeAuction.id} />}
+        {sellerAuction && <BidsCard auction={sellerAuction} />}
       </div>
     </>
   );

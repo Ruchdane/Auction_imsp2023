@@ -8,7 +8,12 @@ import { UpdateItemDto } from "../../../domain/dto/updateItem.dto";
 import { Textarea } from "../../../ui/textarea";
 import itemService from "../../../domain/services/item.service";
 import { Item } from "../../../domain/types/items";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { storageApp } from "../../../domain/firebase/config";
 
 interface itemObj {
@@ -24,7 +29,14 @@ function UpdateItem(props: itemObj) {
     props.item.description,
   );
   const [imageField, setImageField] = useState<File | null>(null);
-  const categoryType = ["Option 1", "Option 2", "Option 3"];
+  const categoryType = [
+    "Informatique et High-Tech",
+    "Meubles et Décoration",
+    "Vêtements et Accessoires",
+    "Sports et Fitness",
+    "Jeux et Jouets",
+    "Autres",
+  ];
   const [categoryIndex, setCategoryIndex] = useState<number | null>(
     categoryType.indexOf(props.item.category),
   );
@@ -117,20 +129,20 @@ function UpdateItem(props: itemObj) {
       props.item.category = categoryType[categoryIndex ?? 0];
 
       // Supprimer l'ancienne image de Firebase Storage (si elle existe)
-      if (previousImageUrl) {
-        const storageRef = ref(storageApp, previousImageUrl);
-        try {
-          await deleteObject(storageRef);
-        } catch (error) {
-          console.error(error);
-          toast({
-            title: "Error",
-            description:
-              "Une erreur est survenue lors de la suppression de l'ancienne image.",
-            variant: "destructive",
-          });
-        }
-      }
+      // if (previousImageUrl) {
+      //   const storageRef = ref(storageApp, previousImageUrl);
+      //   try {
+      //     await deleteObject(storageRef);
+      //   } catch (error) {
+      //     console.error(error);
+      //     toast({
+      //       title: "Error",
+      //       description:
+      //         "Une erreur est survenue lors de la suppression de l'ancienne image.",
+      //       variant: "destructive",
+      //     });
+      //   }
+      // }
     } else {
       toast({
         title: "Error",

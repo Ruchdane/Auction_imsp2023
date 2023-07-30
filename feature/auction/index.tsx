@@ -5,6 +5,7 @@ import { Bid } from "../../domain/types/bid";
 import bidService from "../../domain/services/bid.service";
 import { Timestamp } from "firebase/firestore";
 import { useToast } from "../../ui/use-toast";
+import { useUser } from "../auth";
 
 export const useAuction = (auctionId: string): Auction | null => {
   const [auction, setAuction] = useState<Auction | null>(null);
@@ -35,24 +36,26 @@ export const useMyAmount = (userId: string, auctionId: string): number => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const unsubscribe = bidService.listenCurrentBidUser(
-      userId,
-      auctionId,
-      (myAmount, error) => {
-        if (error) {
-          toast({
-            title: "Error",
-            description: error,
-            variant: "destructive",
-          });
-        } else {
-          setmyAmount(myAmount);
-        }
-      },
-    );
-    return () => {
-      unsubscribe();
-    };
+    if (userId != "") {
+      const unsubscribe = bidService.listenCurrentBidUser(
+        userId,
+        auctionId,
+        (myAmount, error) => {
+          if (error) {
+            toast({
+              title: "Error",
+              description: error,
+              variant: "destructive",
+            });
+          } else {
+            setmyAmount(myAmount);
+          }
+        },
+      );
+      return () => {
+        unsubscribe();
+      };
+    }
   }, []);
 
   return amount;
@@ -168,6 +171,64 @@ export function useActiveAuctions() {
     };
   }, []);
   return activeAuctions;
+}
+
+export function useAuctionsSeller() {
+  const [sellerAuctions, setsellerAuctions] = useState<Auction[]>([]);
+  const { toast } = useToast();
+  const user = useUser();
+
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = auctionService.listenAuctionsFromSeller(
+        user.id,
+        (sellerAuctions, error) => {
+          if (error) {
+            toast({
+              title: "Error",
+              description: error,
+              variant: "destructive",
+            });
+          } else {
+            setsellerAuctions(sellerAuctions);
+          }
+        },
+      );
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [user]);
+  return sellerAuctions;
+}
+
+export function useAuctionsBidder() {
+  const [bidderAuctions, setbidderAuctions] = useState<Auction[]>([]);
+  const { toast } = useToast();
+  const user = useUser();
+
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = auctionService.listenAuctionsFromBidder(
+        user.id,
+        (bidderAuctions, error) => {
+          if (error) {
+            toast({
+              title: "Error",
+              description: error,
+              variant: "destructive",
+            });
+          } else {
+            setbidderAuctions(bidderAuctions);
+          }
+        },
+      );
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [user]);
+  return bidderAuctions;
 }
 
 // Convertir le temps restant en format mm:ss:mmm

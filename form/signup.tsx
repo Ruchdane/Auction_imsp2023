@@ -4,6 +4,8 @@ import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { RegisterDto } from "../domain/dto/register.dto";
 import AuthService from "../domain/services/auth.service";
+import { Link, useNavigate } from "react-router-dom";
+
 
 function Signup() {
   const { toast } = useToast();
@@ -12,6 +14,7 @@ function Signup() {
   const [passwordField, setPasswordField] = useState("");
   const [repasswordField, setRepasswordField] = useState("");
   const toastType = ["Error", "Warning", "Info"];
+  const navigate = useNavigate();
 
   const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
@@ -38,9 +41,10 @@ function Signup() {
     if (response.success) {
       toast({
         title: "Success",
-        description: `Connexion réussie`,
+        description: `Inscription réussie`,
         variant: "default",
       });
+      navigate("/authentification");
     } else {
       toast({
         title: "Error",
@@ -104,9 +108,7 @@ function Signup() {
               </Button>
               <span>
                 Vous avez déjà un compte?{" "}
-                <a className="ml-2" href="/authentification">
-                  Se connecter
-                </a>
+                <Link className="ml-2" to="/authentification">Se connecter</Link>
               </span>
             </div>
           </div>

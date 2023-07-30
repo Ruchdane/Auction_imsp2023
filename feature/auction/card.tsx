@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { Modal, ModalBody, ModalTriger } from "../../ui/modal";
 import { useState } from "react";
 import MakeBid from "../../form/makebid";
-import useAuction, {
+import {
   useAuctionHighBid,
   useEndAuction,
   useHigtestBid,
@@ -13,9 +13,11 @@ import useAuction, {
 import { Link } from "react-router-dom";
 import { Auction } from "../../domain/types/auction";
 import { Bid } from "../../domain/types/bid";
+import { useUser } from "../auth";
+import BidAgain from "../../form/bidagain";
 
 interface AuctionCardProps {
-  auctionId: string;
+  auction: Auction;
 }
 export default function AuctionCard({ data }: { data: Auction }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,9 +72,8 @@ export default function AuctionCard({ data }: { data: Auction }) {
 //   return `${minutes}:${seconds}:${milli}`;
 // }
 
-export function BidsCard({ auctionId }: AuctionCardProps) {
-  const auction: Auction | null = useAuction(auctionId);
-  const high_bids: Bid[] = useAuctionHighBid(auctionId);
+export function BidsCard({ auction }: AuctionCardProps) {
+  const high_bids: Bid[] = useAuctionHighBid(auction.id);
   // const timeRemaining = useTimeRemaining(auction?.endDate);
 
   if (auction === null) return <> </>;
@@ -108,22 +109,20 @@ export function BidsCard({ auctionId }: AuctionCardProps) {
   );
 }
 
-export function AuctionBidCard({ auctionId }: AuctionCardProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const auction = useAuction(auctionId);
-  const high = useHigtestBid(auctionId);
-  const userId = "8OJY14mamOUHY2nWKK0q";
-  const myAmount = useMyAmount(userId, auctionId);
+export function AuctionBidCard({ auction }: AuctionCardProps) {
+  const high = useHigtestBid(auction.id);
+  const user = useUser()
+  const myAmount = useMyAmount(user ? user.id: "", auction.id);
   if (auction === null) return <> </>;
   // const timeRemaining = useTimeRemaining(auction.endDate);
   return (
-    <Card>
+    <><Card>
       <CardHeader className="flex justify-between item-center gap-4">
         <div>
           <p>
             {" "}
             Temps restant <br />
-            {}
+
           </p>
         </div>
         <div>
@@ -134,6 +133,6 @@ export function AuctionBidCard({ auctionId }: AuctionCardProps) {
           <p> Mon Offre Actuelle: {myAmount} XOF</p>
         </div>
       </CardHeader>
-    </Card>
+    </Card><BidAgain /></>
   );
 }

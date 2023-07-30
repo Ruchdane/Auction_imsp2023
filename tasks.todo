@@ -6,10 +6,11 @@ New Features :
     ☐ @critical Notifier les participants d'une enchère et le propriétaire à la fin de l'enchère
     ✔ @high Changer le statut d'un item après sa vente @done (30/07/2023 00:38:45)
     ☐ @low Obliger un utilisateur à se connecter si il veut effectuer les opérations (actions offre, actions du stock )
-    ☐ @low Implémenter le mécanisme de désinscription et de déconnexion d'un utilisateur final
+    ☐ @high Implémenter le mécanisme de désinscription et de déconnexion d'un utilisateur final
     ☐ @critical Implémenter l'intégration des utilisateurs
     ☐ @low Ajouter les catégories
     ☐ @high Vérifier que c'est un utilisateur autre que le seller qui veut faire une offre sur son enchère
+    ☐ @low Mettre les erreurs de wrong credentials provided
 
 Fix :
     ☐ @low Vérifier tous les where("id", "in") de firebase

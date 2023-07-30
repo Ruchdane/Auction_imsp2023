@@ -181,7 +181,7 @@ class AuctionService {
       });
 
       const itemIds: string[] = activeAuctions.map((it) => it.itemId);
-
+      if (itemIds.length === 0) return { success: true, data: [] };
       //const itemsQuery = query(itemCollectionRef, where("id", "in", itemIds));
 
       const itemsSnapshot = await getDocs(itemCollectionRef);
@@ -264,17 +264,15 @@ class AuctionService {
           items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
         });
 
-        const auctionsWithAuctionders: Auction[] = activeAuctions.map(
-          (auction) => {
-            const itemId = auction.itemId;
-            const item = items.find((it) => it.id === itemId);
-            const itemDetails = item ? item : ({} as Item);
-            let result = auction;
-            result.item = itemDetails;
-            return result;
-          },
-        );
-        callback(auctionsWithAuctionders, null);
+        const auctionsWithItem: Auction[] = activeAuctions.map((auction) => {
+          const itemId = auction.itemId;
+          const item = items.find((it) => it.id === itemId);
+          const itemDetails = item ? item : ({} as Item);
+          let result = auction;
+          result.item = itemDetails;
+          return result;
+        });
+        callback(auctionsWithItem, null);
       },
       (error) => {
         // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
@@ -295,6 +293,7 @@ class AuctionService {
   ): Promise<SuccessResponse<Auction[]> | ErrorResponse> {
     try {
       const auctionCollectionRef = collection(firestoreApp, "auctions");
+      const itemCollectionRef = collection(firestoreApp, "items");
       const q = query(
         auctionCollectionRef,
         where("sellerId", "==", userId),
@@ -308,7 +307,28 @@ class AuctionService {
         userAuctions.push({ id: itemDoc.id, ...itemDoc.data() } as Auction);
       });
 
-      return { success: true, data: userAuctions };
+      const itemIds: string[] = userAuctions.map((it) => it.itemId);
+      if (itemIds.length === 0) {
+        return { success: true, data: [] };
+      }
+
+      const itemsSnapshot = await getDocs(itemCollectionRef);
+
+      const items: Item[] = [];
+      itemsSnapshot.forEach((itemDoc) => {
+        items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
+      });
+
+      const auctionsWithItem: Auction[] = userAuctions.map((auction) => {
+        const itemId = auction.itemId;
+        const item = items.find((it) => it.id === itemId);
+        const itemDetails = item ? item : ({} as Item);
+        let result = auction;
+        result.item = itemDetails;
+        return result;
+      });
+
+      return { success: true, data: auctionsWithItem };
     } catch (error) {
       console.error(
         "Error retrieving auctions associated with the seller:",
@@ -326,6 +346,7 @@ class AuctionService {
     callback: (updatedAuctions: Auction[], error: string | null) => void,
   ): () => void {
     const auctionCollectionRef = collection(firestoreApp, "auctions");
+    const itemCollectionRef = collection(firestoreApp, "items");
     const q = query(
       auctionCollectionRef,
       where("sellerId", "==", userId),
@@ -334,7 +355,7 @@ class AuctionService {
 
     const unsubscribe = onSnapshot(
       q,
-      (querySnapshot) => {
+      async (querySnapshot) => {
         const updatedAuctions: Auction[] = [];
 
         querySnapshot.forEach((itemDoc) => {
@@ -343,8 +364,29 @@ class AuctionService {
             ...itemDoc.data(),
           } as Auction);
         });
+        const itemIds: string[] = updatedAuctions.map((it) => it.itemId);
+        if (itemIds.length === 0) {
+          callback([], null);
+          return;
+        }
 
-        callback(updatedAuctions, null);
+        const itemsSnapshot = await getDocs(itemCollectionRef);
+
+        const items: Item[] = [];
+        itemsSnapshot.forEach((itemDoc) => {
+          items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
+        });
+
+        const auctionsWithItems: Auction[] = updatedAuctions.map((auction) => {
+          const itemId = auction.itemId;
+          const item = items.find((it) => it.id === itemId);
+          const itemDetails = item ? item : ({} as Item);
+          let result = auction;
+          result.item = itemDetails;
+          return result;
+        });
+
+        callback(auctionsWithItems, null);
       },
       (error) => {
         // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
@@ -366,6 +408,7 @@ class AuctionService {
     try {
       const bidCollectionRef = collection(firestoreApp, "bids");
       const auctionsCollectionRef = collection(firestoreApp, "auctions");
+      const itemCollectionRef = collection(firestoreApp, "items");
       const auctions: Auction[] = [];
       // Créez une requête pour récupérer les offres de l'utilisateur donné (userId)
       const bidsQuery = query(
@@ -406,7 +449,28 @@ class AuctionService {
         auctions.push({ id: auctionDoc.id, ...auctionDoc.data() } as Auction);
       });
 
-      return { success: true, data: auctions };
+      const itemIds: string[] = auctions.map((it) => it.itemId);
+      if (itemIds.length === 0) {
+        return { success: true, data: [] };
+      }
+
+      const itemsSnapshot = await getDocs(itemCollectionRef);
+
+      const items: Item[] = [];
+      itemsSnapshot.forEach((itemDoc) => {
+        items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
+      });
+
+      const auctionsWithItem: Auction[] = auctions.map((auction) => {
+        const itemId = auction.itemId;
+        const item = items.find((it) => it.id === itemId);
+        const itemDetails = item ? item : ({} as Item);
+        let result = auction;
+        result.item = itemDetails;
+        return result;
+      });
+
+      return { success: true, data: auctionsWithItem };
     } catch (error) {
       console.error(
         "Error retrieving auctions associated with the bidder:",
@@ -418,6 +482,89 @@ class AuctionService {
       };
     }
   }
+
+  listenAuctionsFromBidder(
+    userId: string,
+    callback: (updatedAuctions: Auction[], error: string | null) => void
+  ): () => void {
+    const bidCollectionRef = collection(firestoreApp, "bids");
+    const auctionsCollectionRef = collection(firestoreApp, "auctions");
+    const itemCollectionRef = collection(firestoreApp, "items");
+  
+    // Créez une requête pour récupérer les offres de l'utilisateur donné (userId)
+    const bidsQuery = query(
+      bidCollectionRef,
+      where("bidderId", "==", userId),
+    );
+  
+    // Démarrer l'écoute en temps réel des offres associées à l'enchérisseur spécifique
+    const unsubscribe = onSnapshot(bidsQuery, async (bidsSnapshot) => {
+      const auctions: Auction[] = [];
+      const bids: Bid[] = [];
+  
+      bidsSnapshot.forEach((bidDoc) => {
+        bids.push({ id: bidDoc.id, ...bidDoc.data() } as Bid);
+      });
+  
+      if (bids.length === 0) {
+        // Si l'enchérisseur n'a pas d'offres, appeler le rappel avec des enchères vides et null pour l'erreur
+        callback(auctions, null);
+        return;
+      }
+  
+      // Récupérez les ID uniques des enchères associées aux offres
+      const auctionIds: string[] = Array.from(
+        new Set(bids.map((bid) => bid.auctionId)),
+      );
+  
+      // Créez une requête pour récupérer les enchères associées aux ID récupérés
+      const auctionsQuery = query(
+        auctionsCollectionRef,
+        where("id", "in", auctionIds),
+        where("status", "==", StatusAuction.OPEN),
+      );
+  
+      // Exécutez la requête et récupérez les enchères correspondantes
+      const auctionsSnapshot = await getDocs(auctionsQuery);
+  
+      auctionsSnapshot.forEach((auctionDoc) => {
+        auctions.push({ id: auctionDoc.id, ...auctionDoc.data() } as Auction);
+      });
+  
+      const itemIds: string[] = auctions.map((it) => it.itemId);
+      if (itemIds.length === 0) {
+        // Si les enchères n'ont pas d'élément associé, appeler le rappel avec des enchères vides et null pour l'erreur
+        callback(auctions, null);
+        return;
+      }
+  
+      const itemsSnapshot = await getDocs(itemCollectionRef);
+  
+      const items: Item[] = [];
+      itemsSnapshot.forEach((itemDoc) => {
+        items.push({ id: itemDoc.id, ...itemDoc.data() } as Item);
+      });
+  
+      const auctionsWithItem: Auction[] = auctions.map((auction) => {
+        const itemId = auction.itemId;
+        const item = items.find((it) => it.id === itemId);
+        const itemDetails = item ? item : ({} as Item);
+        let result = auction;
+        result.item = itemDetails;
+        return result;
+      });
+  
+      // Appeler le rappel avec les enchères mises à jour et null pour l'erreur
+      callback(auctionsWithItem, null);
+    }, (error) => {
+      // En cas d'erreur pendant l'écoute, appeler le rappel avec une chaîne d'erreur et des enchères vides
+      callback([], "Erreur lors de l'écoute des enchères de l'enchérisseur : " + error.message);
+    });
+  
+    // Retourner une fonction pour désabonner l'écoute en temps réel lorsque cela n'est plus nécessaire
+    return unsubscribe;
+  }
+  
 }
 
 export default new AuctionService();

@@ -9,6 +9,7 @@ import { Textarea } from "../ui/textarea";
 import itemService from "../domain/services/item.service";
 import { storageApp } from "../domain/firebase/config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useUser } from "../feature/auth";
 
 function CreateItem() {
   const { toast } = useToast();
@@ -17,10 +18,17 @@ function CreateItem() {
   const [quantityField, setQuantityField] = useState(1);
   const [descriptionField, setDescriptionField] = useState("");
   const [imageField, setImageField] = useState<File | null>(null);
-  const categoryType = ["Option 1", "Option 2", "Option 3"];
+  const categoryType = [
+    "Informatique et High-Tech",
+    "Meubles et Décoration",
+    "Vêtements et Accessoires",
+    "Sports et Fitness",
+    "Jeux et Jouets",
+    "Autres",
+  ];
   const [categoryIndex, setCategoryIndex] = useState<number | null>(null);
-  const toastType = ["Error", "Warning", "Info"];
-  const [toastIndex, setToastIndex] = useState<number | null>(null);
+
+  const user = useUser();
 
   const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
@@ -64,7 +72,7 @@ function CreateItem() {
         const imageUrl = await getDownloadURL(storageRef);
 
         const dto: AddItemDto = {
-          stockId: "ALC9DaaxLNx72nQbChyr",
+          stockId: user? user.stockId : "None",
           name: nameField,
           initial_price: priceField,
           quantity: quantityField,
