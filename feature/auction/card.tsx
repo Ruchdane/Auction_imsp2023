@@ -19,6 +19,7 @@ import BidAgain from "../../form/bidagain";
 interface AuctionCardProps {
   auction: Auction;
 }
+
 export default function AuctionCard({ data }: { data: Auction }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const high = useHigtestBid(data.id);
@@ -52,7 +53,7 @@ export default function AuctionCard({ data }: { data: Auction }) {
               }
             />
             <ModalBody title="" isOpen={isModalOpen}>
-              <MakeBid />
+              <MakeBid auctionId={data.id} bidderId="8OJY14mamOUHY2nWKK0q"/>
             </ModalBody>
           </Modal>
           <Link to="/mes_encheres/detail" className="inline-flex">
