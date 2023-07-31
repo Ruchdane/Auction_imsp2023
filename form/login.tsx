@@ -3,11 +3,11 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { LoginDto } from "../domain/dto/login.dto";
+import { Label } from "@radix-ui/react-label";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import authService from "../domain/services/auth.service";
 import { ThemeSwitcher, useColor } from "../feature/theme";
-
 
 function Login() {
   const { toast } = useToast();
@@ -20,7 +20,9 @@ function Login() {
 
   const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
-    return emailField === "" || passwordField === "";
+    return (
+      emailField === "" || passwordField === ""
+    );
   }, [emailField, passwordField]);
 
   async function handleSubmit(e: any): Promise<void> {
@@ -67,14 +69,16 @@ function Login() {
             <h2 className="text-3xl font-bold">Se connecter</h2>
             <div className="flex flex-col items-center gap-4">
               <div className="w-full">
+                <Label>Email</Label>
                 <Input
                   type="email"
-                  placeholder="Email"
+                  placeholder=""
                   value={emailField}
                   onChange={(e) => setEmailField(e.target.value)}
                 />
               </div>
               <div className="w-full">
+                <Label>Mot de passe</Label>
                 <Input
                   type="password"
                   placeholder="Mot de passe"
