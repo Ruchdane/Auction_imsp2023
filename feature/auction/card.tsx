@@ -7,7 +7,7 @@ import {
   useAuctionHighBid,
   useEndAuction,
   useHigtestBid,
-  useMyAmount,
+  useMyBid,
   useTimeRemaining,
 } from ".";
 import { Link } from "react-router-dom";
@@ -113,7 +113,8 @@ export function BidsCard({ auction }: AuctionCardProps) {
 export function AuctionBidCard({ auction }: AuctionCardProps) {
   const high = useHigtestBid(auction.id);
   const user = useUser();
-  const myAmount = useMyAmount(user ? user.id : "", auction.id);
+  const myBid = useMyBid(user ? user.id : "", auction.id);
+  
   if (auction === null) return <> </>;
   // const timeRemaining = useTimeRemaining(auction.endDate);
   return (
@@ -131,11 +132,11 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
             <p> Prix Minimum : {auction.item.initial_price} XOF</p>
             <p> Quantité : {auction.item.quantity} </p>
             <p> Plus Offrant : {high} XOF</p>
-            <p> Mon Offre Actuelle: {myAmount} XOF</p>
+            {myBid && <p> Mon Offre Actuelle: {myBid.amount} XOF</p>}
           </div>
         </CardHeader>
       </Card>
-      <BidAgain bidId=""/>
+      <BidAgain bid={myBid}/>
     </>
   );
 }

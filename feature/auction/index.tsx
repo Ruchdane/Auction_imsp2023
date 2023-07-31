@@ -31,8 +31,8 @@ export const useAuction = (auctionId: string): Auction | null => {
 };
 
 // Pour récupérer mon offre actuelle
-export const useMyAmount = (userId: string, auctionId: string): number => {
-  const [amount, setmyAmount] = useState<number>(0);
+export const useMyBid = (userId: string, auctionId: string): Bid|null=> {
+  const [myBid, setmyBid] = useState<Bid|null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export const useMyAmount = (userId: string, auctionId: string): number => {
       const unsubscribe = bidService.listenCurrentBidUser(
         userId,
         auctionId,
-        (myAmount, error) => {
+        (myBid, error) => {
           if (error) {
             toast({
               title: "Error",
@@ -48,7 +48,7 @@ export const useMyAmount = (userId: string, auctionId: string): number => {
               variant: "destructive",
             });
           } else {
-            setmyAmount(myAmount);
+            setmyBid(myBid);
           }
         },
       );
@@ -58,7 +58,7 @@ export const useMyAmount = (userId: string, auctionId: string): number => {
     }
   }, []);
 
-  return amount;
+  return myBid;
 };
 // Pour récupérer la 1ère offre
 export const useHigtestBid = (auctionId: string): number => {

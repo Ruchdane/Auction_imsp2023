@@ -9,32 +9,33 @@ import {
   ErrorResponse,
   SuccessResponse,
 } from "../domain/interfaces/response.interface";
+import { Bid } from "../domain/types/bid";
 
-interface bidAginProps {
-  bidId: string
+interface bidAgainProps {
+  bid: Bid |null;
 }
 
-function BidAgain(props: bidAginProps) {
+function BidAgain(props: bidAgainProps) {
   const { toast } = useToast();
   const [amountField, setAmaountField] = useState(0);
-  const toastType = ["Error", "Warning", "Info"];
 
   const [isLoading, setIsloading] = useState(false);
   const disabled = useMemo(() => {
     return amountField < 0;
   }, [amountField]);
 
-  async function handleSubmit(e: any): Promise<SuccessResponse<string | null> | ErrorResponse> {
+  async function handleSubmit(
+    e: any,
+  ): Promise<SuccessResponse<string | null> | ErrorResponse> {
     e.preventDefault();
     setIsloading(() => true);
     try {
       const dto: BidAgainDto = {
-        bidId: props.bidId,
+        bidId: props.bid? props.bid.id : "None",
         amount: amountField,
       };
       const response = await bidService.bidAgain(dto);
       if (response.success) {
-
         toast({
           title: "Success",
           description: `L'offre a été fait avec succès!`,

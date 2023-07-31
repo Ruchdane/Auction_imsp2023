@@ -75,7 +75,10 @@ class BidService {
           };
         }
 
-        await this.checkBid(bidCollectionRef, dto.auctionId, dto.amount);
+        const result = await this.checkBid(bidCollectionRef, dto.auctionId, dto.amount);
+        if (!result.success) {
+          return result
+        }
         const newBidData = {
           ...dto,
           updatedDate: Timestamp.now(),
@@ -103,8 +106,10 @@ class BidService {
         const bidData = bidSnapshot.data() as Bid;
         const bidCollectionRef = collection(firestoreApp, "bids");
 
-        await this.checkBid(bidCollectionRef, bidData.auctionId, dto.amount);
-
+        const result = await this.checkBid(bidCollectionRef, bidData.auctionId, dto.amount);
+        if (!result.success) {
+          return result
+        }
         // Effectuez la mise à jour dans Firestore
         await updateDoc(bidRef, {
           amount: dto.amount,
@@ -112,7 +117,7 @@ class BidService {
         });
         return { success: true, data: null };
       } else {
-        return { success: false, message: "Offre introuvable" };
+        return { success: false, message: "Offre introuvable." };
       }
     } catch (error) {
       console.error("Error updating the bid:", error);
@@ -123,7 +128,7 @@ class BidService {
     bidCollectionRef: CollectionReference<DocumentData, DocumentData>,
     auctionId: string,
     amount: number,
-  ): Promise<void> {
+  ):  Promise<SuccessResponse<null> | ErrorResponse> {
     const bidsQuery = query(
       bidCollectionRef,
       where("auctionId", "==", auctionId),
@@ -142,10 +147,9 @@ class BidService {
     });
 
     if (amount <= highestBid) {
-      throw new Error(
-        "Le montant de l'offre doit être supérieur à l'offre actuelle.",
-      );
+      return { success: false, message: "Le montant de l'offre doit être supérieur à l'offre la plus haute actuelle." };
     }
+    return { success: true, data :null}
   }
 
   async getAuction(
@@ -427,7 +431,7 @@ class BidService {
   listenCurrentBidUser(
     userId: string,
     auctionId: string,
-    callback: (currentBid: number, error: string | null) => void,
+    callback: (currentBid: Bid |null, error: string | null) => void,
   ): () => void {
     const bidCollectionRef = collection(firestoreApp, "bids");
 
@@ -443,11 +447,12 @@ class BidService {
       userBidQuery,
       (snapshot) => {
         if (!snapshot.empty) {
-          const userBidData = snapshot.docs[0].data() as Bid;
-          callback(userBidData.amount, null);
+          const userBidData = snapshot.docs[0].data();
+
+          callback({id:snapshot.docs[0].id , ...userBidData} as Bid, null);
         } else {
           // Aucune offre de l'utilisateur pour cette enchère
-          callback(0, null);
+          callback(null, null);
         }
       },
       (error) => {
@@ -458,7 +463,7 @@ class BidService {
         );
 
         callback(
-          0,
+          null,
           "L'extraction de l'offre actuelle d'un utilisateur d'une enchère a échoué.",
         );
       },
