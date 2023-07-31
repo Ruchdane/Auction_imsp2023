@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context";
+import { useNavigate } from "react-router-dom";
 
 export function useUser() {
   const authContext = useContext(AuthContext);
@@ -11,12 +12,30 @@ export function useUser() {
         setUser(authContext.user);
       } else {
         setUser(null);
-        console.log("No user");
       }
     };
 
     updateUser();
   }, [authContext]);
+
+  return user;
+}
+
+export function useRedirectUserToLogin(pathname:string) {
+  const user = useUser();
+  const navigate = useNavigate();
+
+  const privateLinks = ["/mes_encheres","/mes_produits","/mes_offres"];
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!user && privateLinks.includes(pathname)) {
+        navigate("/authentification", { state: { from: pathname } });
+      }
+    };
+
+    checkAuth();
+  }, [pathname, navigate,user]);
 
   return user;
 }

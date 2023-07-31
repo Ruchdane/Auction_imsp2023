@@ -7,8 +7,13 @@ import { BidsCard } from "../../feature/auction/card";
 import { useAuctionsSeller } from "../../feature/auction";
 import List from "../../ui/list";
 import { Auction } from "../../domain/types/auction";
+import { useLocation} from "react-router-dom";
+import { useRedirectUserToLogin} from "../../feature/auth";
 
 export default function MyAuctions() {
+  const location = useLocation();
+  useRedirectUserToLogin(location.pathname);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sellerAuctions = useAuctionsSeller();
   const [sellerAuction, setsellerAuction] = useState<Auction | null>(null);

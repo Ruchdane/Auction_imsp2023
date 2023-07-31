@@ -20,6 +20,7 @@ interface ModalTriggerProps {
   label: string;
   disabled?: boolean;
   className?: string;
+  onClick?: ()=> void
 }
 const ModalTriger = (props: ModalTriggerProps) => {
   return (
@@ -29,6 +30,7 @@ const ModalTriger = (props: ModalTriggerProps) => {
         className={props.className}
         title={props.label}
         disabled={props.disabled}
+        onClick={props.onClick}
       >
         {props.icon}
       </Button>

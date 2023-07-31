@@ -1,7 +1,7 @@
 "use client";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { ThemeContext } from "./context";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import { themes } from "./themes";
 import { Button } from "../../ui/button";
@@ -33,4 +33,16 @@ export function ThemeSwitcher({ className }: { className?: string }) {
       </PopoverContent>
     </Popover>
   );
+}
+
+export function useColor() {
+  const { state } = useContext(ThemeContext);
+  const [bgColorClass, setBgColorClass] = useState(
+    state.className === "light" ? "bg-white" : "bg-gray-900",
+  );
+  useEffect(() => {
+    setBgColorClass(state.className === "light" ? "bg-white" : "bg-gray-900");
+  }, [state]);
+
+  return bgColorClass
 }

@@ -10,7 +10,7 @@ import {
   useMyBid,
   useTimeRemaining,
 } from ".";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Auction } from "../../domain/types/auction";
 import { Bid } from "../../domain/types/bid";
 import { useUser } from "../auth";
@@ -24,8 +24,17 @@ export default function AuctionCard({ data }: { data: Auction }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const high = useHigtestBid(data.id);
   const timeRemaining = useTimeRemaining(data.endDate);
-
+  const user = useUser();
+  const navigate = useNavigate();
   useEndAuction(timeRemaining, data.id);
+
+  const handleBidButtonClick = () => {
+    if (!user) {
+      navigate("/authentification");
+    } else {
+      setIsModalOpen(true);
+    }
+  };
 
   return (
     <Card>
@@ -42,20 +51,23 @@ export default function AuctionCard({ data }: { data: Auction }) {
         <p> Temps restant : {timeRemaining}</p>
         <p> Plus Offrant : {high} XOF</p>
         <div className="flex justify-between items-center pt-4">
-          <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <ModalTriger
-              label="Make bid"
-              icon={
-                <>
-                  <Plus size={24} />
-                  Enchérir
-                </>
-              }
-            />
-            <ModalBody title="" isOpen={isModalOpen}>
-              <MakeBid auctionId={data.id} />
-            </ModalBody>
-          </Modal>
+          {(!user || (user && user.id != data.sellerId)) && (
+            <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <ModalTriger
+                label="Enchérir"
+                icon={
+                  <>
+                    <Plus size={24} />
+                    Enchérir
+                  </>
+                }
+                onClick={handleBidButtonClick}
+              />
+              <ModalBody title="" isOpen={isModalOpen}>
+                <MakeBid auctionId={data.id}  />
+              </ModalBody>
+            </Modal>
+          )}
           <Link to="/mes_encheres/detail" className="inline-flex">
             <ChevronDown size={24} />
             Détails
@@ -114,7 +126,7 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
   const high = useHigtestBid(auction.id);
   const user = useUser();
   const myBid = useMyBid(user ? user.id : "", auction.id);
-  
+
   if (auction === null) return <> </>;
   // const timeRemaining = useTimeRemaining(auction.endDate);
   return (
@@ -128,7 +140,7 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
             </p>
           </div>
           <div>
-            <p> Nom : {auction.item.name} XOF</p>
+            <p> Nom : {auction.item.name}</p>
             <p> Prix Minimum : {auction.item.initial_price} XOF</p>
             <p> Quantité : {auction.item.quantity} </p>
             <p> Plus Offrant : {high} XOF</p>
@@ -136,7 +148,7 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
           </div>
         </CardHeader>
       </Card>
-      <BidAgain bid={myBid}/>
+      <BidAgain bid={myBid} />
     </>
   );
 }

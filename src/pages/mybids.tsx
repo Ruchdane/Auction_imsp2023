@@ -4,9 +4,12 @@ import { AuctionBidCard } from "../../feature/auction/card";
 import List from "../../ui/list";
 import { useAuctionsBidder } from "../../feature/auction";
 import { Auction } from "../../domain/types/auction";
+import { useLocation } from "react-router-dom";
+import { useRedirectUserToLogin } from "../../feature/auth";
 
 export default function MyBids() {
-
+  const location = useLocation();
+  useRedirectUserToLogin(location.pathname);
   const bidderAuctions = useAuctionsBidder();
   const [bidderAuction, setbidderAuction] = useState<Auction | null>(null);
   return (

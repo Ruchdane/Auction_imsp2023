@@ -1,5 +1,4 @@
-import { LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Navigation,
   NavigationItem,
@@ -14,6 +13,7 @@ import { useToast } from "../ui/use-toast";
 export function Navbar() {
   const authContext = useContext(AuthContext);
   const user = authContext?.user;
+  const navigate = useNavigate();
 
   const { toast } = useToast();
 
@@ -25,6 +25,7 @@ export function Navbar() {
         description: `Déconnexion réussie`,
         variant: "default",
       });
+      navigate("/");
     } else {
       toast({
         title: "Error",

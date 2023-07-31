@@ -6,7 +6,7 @@ export enum StatusAuction {
 }
 export type Auction = {
   id: string;
-  sellerId: number;
+  sellerId: string;
   startDate: any;
   endDate: any;
   item: Item;
