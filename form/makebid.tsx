@@ -6,6 +6,10 @@ import { useToast } from "../ui/use-toast";
 import { MakeBidDto } from "../domain/dto/makeBid.dto";
 import bidService from "../domain/services/bid.service";
 import { useUser } from "../feature/auth";
+import {
+  ErrorResponse,
+  SuccessResponse,
+} from "../domain/interfaces/response.interface";
 
 interface makeBidProps {
   auctionId: string;
@@ -22,7 +26,7 @@ function MakeBid(props: makeBidProps) {
     return amountField < 0;
   }, [amountField]);
 
-  async function handleSubmit(e: any): Promise<void> {
+  async function handleSubmit(e: any): Promise<SuccessResponse<string> | ErrorResponse> {
     e.preventDefault();
     setIsloading(() => true);
     try {
@@ -33,28 +37,37 @@ function MakeBid(props: makeBidProps) {
       };
       const response = await bidService.makeBid(dto);
       if (response.success) {
+
         toast({
           title: "Success",
-          description: `L'article a été ajouté avec succès!`,
+          description: `L'offre a été fait avec succès!`,
           variant: "default",
         });
+        setIsloading(false);
+        return response;
       } else {
         toast({
           title: "Error",
           description: `${response.message}`,
           variant: "destructive",
         });
+        setIsloading(false);
+        return response;
       }
     } catch (error) {
       console.error(error);
 
       toast({
         title: "Error",
-        description: "Une erreur est survenue lors de l'upload de l'image.",
+        description: String(error),
         variant: "destructive",
       });
+      setIsloading(false);
+      return {
+        success: false,
+        message: "An error occurred while making the bid.",
+      };
     }
-    setIsloading(false);
   }
 
   return (

@@ -3,8 +3,18 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
+import bidService from "../domain/services/bid.service";
+import { BidAgainDto } from "../domain/dto/bidAgain.dto";
+import {
+  ErrorResponse,
+  SuccessResponse,
+} from "../domain/interfaces/response.interface";
 
-function BidAgain() {
+interface bidAginProps {
+  bidId: string
+}
+
+function BidAgain(props: bidAginProps) {
   const { toast } = useToast();
   const [amountField, setAmaountField] = useState(0);
   const toastType = ["Error", "Warning", "Info"];
@@ -14,16 +24,47 @@ function BidAgain() {
     return amountField < 0;
   }, [amountField]);
 
-  function handleSubmit(e: any): void {
+  async function handleSubmit(e: any): Promise<SuccessResponse<string | null> | ErrorResponse> {
     e.preventDefault();
     setIsloading(() => true);
-    setTimeout(() => {
-      setIsloading(() => false);
+    try {
+      const dto: BidAgainDto = {
+        bidId: props.bidId,
+        amount: amountField,
+      };
+      const response = await bidService.bidAgain(dto);
+      if (response.success) {
+
+        toast({
+          title: "Success",
+          description: `L'offre a été fait avec succès!`,
+          variant: "default",
+        });
+        setIsloading(false);
+        return response;
+      } else {
+        toast({
+          title: "Error",
+          description: `${response.message}`,
+          variant: "destructive",
+        });
+        setIsloading(false);
+        return response;
+      }
+    } catch (error) {
+      console.error(error);
+
       toast({
-        title: toastType[0],
-        description: `${amountField}`,
+        title: "Error",
+        description: String(error),
+        variant: "destructive",
       });
-    }, 1000);
+      setIsloading(false);
+      return {
+        success: false,
+        message: "An error occurred while making the bid.",
+      };
+    }
   }
 
   return (

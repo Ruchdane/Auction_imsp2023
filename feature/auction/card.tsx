@@ -135,7 +135,7 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
           </div>
         </CardHeader>
       </Card>
-      <BidAgain />
+      <BidAgain bidId=""/>
     </>
   );
 }
