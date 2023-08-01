@@ -21,11 +21,11 @@ export function useUser() {
   return user;
 }
 
-export function useRedirectUserToLogin(pathname:string) {
+export function useRedirectUserToLogin(pathname: string) {
   const user = useUser();
   const navigate = useNavigate();
 
-  const privateLinks = ["/mes_encheres","/mes_produits","/mes_offres"];
+  const privateLinks = ["/mes_encheres", "/mes_produits", "/mes_offres"];
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -35,7 +35,7 @@ export function useRedirectUserToLogin(pathname:string) {
     };
 
     checkAuth();
-  }, [pathname, navigate,user]);
+  }, [pathname, navigate, user]);
 
   return user;
 }

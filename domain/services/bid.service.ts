@@ -32,7 +32,10 @@ class BidService {
       const userRef = doc(firestoreApp, "users", dto.bidderId);
       const userSnapshot = await getDoc(userRef);
       if (!userSnapshot.exists()) {
-        return { success: false, message: "Utilisateur faisant l'offre introuvable." };
+        return {
+          success: false,
+          message: "Utilisateur faisant l'offre introuvable.",
+        };
       }
       const auctionRef = doc(firestoreApp, "auctions", dto.auctionId);
       const auctionSnapshot = await getDoc(auctionRef);
@@ -75,9 +78,13 @@ class BidService {
           };
         }
 
-        const result = await this.checkBid(bidCollectionRef, dto.auctionId, dto.amount);
+        const result = await this.checkBid(
+          bidCollectionRef,
+          dto.auctionId,
+          dto.amount,
+        );
         if (!result.success) {
-          return result
+          return result;
         }
         const newBidData = {
           ...dto,
@@ -106,9 +113,13 @@ class BidService {
         const bidData = bidSnapshot.data() as Bid;
         const bidCollectionRef = collection(firestoreApp, "bids");
 
-        const result = await this.checkBid(bidCollectionRef, bidData.auctionId, dto.amount);
+        const result = await this.checkBid(
+          bidCollectionRef,
+          bidData.auctionId,
+          dto.amount,
+        );
         if (!result.success) {
-          return result
+          return result;
         }
         // Effectuez la mise à jour dans Firestore
         await updateDoc(bidRef, {
@@ -128,7 +139,7 @@ class BidService {
     bidCollectionRef: CollectionReference<DocumentData, DocumentData>,
     auctionId: string,
     amount: number,
-  ):  Promise<SuccessResponse<null> | ErrorResponse> {
+  ): Promise<SuccessResponse<null> | ErrorResponse> {
     const bidsQuery = query(
       bidCollectionRef,
       where("auctionId", "==", auctionId),
@@ -147,9 +158,13 @@ class BidService {
     });
 
     if (amount <= highestBid) {
-      return { success: false, message: "Le montant de l'offre doit être supérieur à l'offre la plus haute actuelle." };
+      return {
+        success: false,
+        message:
+          "Le montant de l'offre doit être supérieur à l'offre la plus haute actuelle.",
+      };
     }
-    return { success: true, data :null}
+    return { success: true, data: null };
   }
 
   async getAuction(
@@ -431,7 +446,7 @@ class BidService {
   listenCurrentBidUser(
     userId: string,
     auctionId: string,
-    callback: (currentBid: Bid |null, error: string | null) => void,
+    callback: (currentBid: Bid | null, error: string | null) => void,
   ): () => void {
     const bidCollectionRef = collection(firestoreApp, "bids");
 
@@ -449,7 +464,7 @@ class BidService {
         if (!snapshot.empty) {
           const userBidData = snapshot.docs[0].data();
 
-          callback({id:snapshot.docs[0].id , ...userBidData} as Bid, null);
+          callback({ id: snapshot.docs[0].id, ...userBidData } as Bid, null);
         } else {
           // Aucune offre de l'utilisateur pour cette enchère
           callback(null, null);

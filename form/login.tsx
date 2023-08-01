@@ -8,7 +8,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import authService from "../domain/services/auth.service";
 import { ThemeSwitcher, useColor } from "../feature/theme";
 
-
 function Login() {
   const { toast } = useToast();
   const [emailField, setEmailField] = useState("");

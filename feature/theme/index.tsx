@@ -44,5 +44,5 @@ export function useColor() {
     setBgColorClass(state.className === "light" ? "bg-white" : "bg-gray-900");
   }, [state]);
 
-  return bgColorClass
+  return bgColorClass;
 }

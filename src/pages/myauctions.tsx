@@ -7,8 +7,8 @@ import { BidsCard } from "../../feature/auction/card";
 import { useAuctionsSeller } from "../../feature/auction";
 import List from "../../ui/list";
 import { Auction } from "../../domain/types/auction";
-import { useLocation} from "react-router-dom";
-import { useRedirectUserToLogin} from "../../feature/auth";
+import { useLocation } from "react-router-dom";
+import { useRedirectUserToLogin } from "../../feature/auth";
 
 export default function MyAuctions() {
   const location = useLocation();
@@ -19,7 +19,7 @@ export default function MyAuctions() {
   const [sellerAuction, setsellerAuction] = useState<Auction | null>(null);
 
   const isSellerAuctionPresent = sellerAuctions.some(
-    (auction) => auction.id === sellerAuction?.id
+    (auction) => auction.id === sellerAuction?.id,
   );
   return (
     <>
@@ -43,7 +43,9 @@ export default function MyAuctions() {
             />
           </CardContent>
         </Card>
-        { isSellerAuctionPresent && sellerAuction && <BidsCard auction={sellerAuction} />}
+        {isSellerAuctionPresent && sellerAuction && (
+          <BidsCard auction={sellerAuction} />
+        )}
       </div>
     </>
   );
