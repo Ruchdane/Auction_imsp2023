@@ -6,6 +6,7 @@ import { RegisterDto } from "../domain/dto/register.dto";
 import AuthService from "../domain/services/auth.service";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeSwitcher, useColor } from "../feature/theme";
+import { Label } from "@radix-ui/react-label";
 
 function Signup() {
   const { toast } = useToast();
@@ -13,6 +14,7 @@ function Signup() {
   const [nameField, setNameField] = useState("");
   const [passwordField, setPasswordField] = useState("");
   const [repasswordField, setRepasswordField] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
 
   const navigate = useNavigate();
   const bgColorClass = useColor();
@@ -27,6 +29,11 @@ function Signup() {
     );
   }, [emailField, passwordField, repasswordField]);
 
+  function validateEmail(email: string) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
   async function handleSubmit(e: any): Promise<void> {
     e.preventDefault();
     setIsloading(() => true);
@@ -37,23 +44,31 @@ function Signup() {
       name: nameField,
     };
 
-    const response = await AuthService.signup(dto);
-
-    if (response.success) {
-      toast({
-        title: "Success",
-        description: `Inscription réussie`,
-        variant: "default",
-      });
-      navigate("/authentification");
+    if (!validateEmail(e.target.value)) {
+      setIsEmailValid(false);
+      setTimeout(() => {
+        setIsEmailValid(true);
+      }, 3000);
+      setIsloading(false);
     } else {
-      toast({
-        title: "Error",
-        description: `${response.message}`,
-        variant: "destructive",
-      });
+      const response = await AuthService.signup(dto);
+
+      if (response.success) {
+        toast({
+          title: "Success",
+          description: `Inscription réussie`,
+          variant: "default",
+        });
+        navigate("/authentification");
+      } else {
+        toast({
+          title: "Error",
+          description: `${response.message}`,
+          variant: "destructive",
+        });
+      }
+      setIsloading(false);
     }
-    setIsloading(false);
   }
 
   return (
@@ -67,14 +82,25 @@ function Signup() {
             <h2 className="text-3xl font-bold">Inscription</h2>
             <div className="flex flex-col items-center gap-4">
               <div className="w-full">
+                <Label>Email</Label>
+                {!isEmailValid && (
+                  <p
+                    style={{ color: "red", margin: "4px 0", fontSize: "14px" }}
+                  >
+                    Veuillez saisir une adresse email valide.
+                  </p>
+                )}
                 <Input
                   type="email"
-                  placeholder="Email"
+                  placeholder="nom_utilisateur@domaine.extension"
                   value={emailField}
-                  onChange={(e) => setEmailField(e.target.value)}
+                  onChange={(e) => {
+                    setEmailField(e.target.value);
+                  }}
                 />
               </div>
               <div className="w-full">
+                <Label>Nom</Label>
                 <Input
                   placeholder="Nom"
                   value={nameField}
@@ -82,6 +108,7 @@ function Signup() {
                 />
               </div>
               <div className="w-full">
+                <Label>Mot de passe</Label>
                 <Input
                   type="password"
                   placeholder="Mot de passe"
