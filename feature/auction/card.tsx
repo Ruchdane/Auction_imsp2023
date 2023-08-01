@@ -109,9 +109,9 @@ export function BidsCard({ auction }: AuctionCardProps) {
       <CardContent>
         <h3 className="text-lg font-semibold"> Top 5 Encheres </h3>
         <ul className="list-none">
-          {high_bids.map((bid, key) => (
-            <li className="flex justify-between gap-16 border rounded-lg p-4 m-1">
-              <span className="p-2 rounded-lg border"> {key}</span>
+          {high_bids.map((bid, index) => (
+            <li key={bid.id} className="flex justify-between gap-16 border rounded-lg p-4 m-1">
+              <span className="p-2 rounded-lg border"> {index + 1}</span>
               <span> Nom : {bid.bidder.name}</span>
               <span> Prix :{bid.amount}</span>
             </li>
