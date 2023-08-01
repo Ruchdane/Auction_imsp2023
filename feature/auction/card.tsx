@@ -1,7 +1,7 @@
 import { ChevronDown, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { Modal, ModalBody, ModalTriger } from "../../ui/modal";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MakeBid from "../../form/makebid";
 import {
   useAuctionHighBid,
@@ -15,6 +15,7 @@ import { Auction } from "../../domain/types/auction";
 import { Bid } from "../../domain/types/bid";
 import { useUser } from "../auth";
 import BidAgain from "../../form/bidagain";
+import { Timer } from "../../ui/timer";
 
 interface AuctionCardProps {
   auction: Auction;
@@ -64,7 +65,7 @@ export default function AuctionCard({ data }: { data: Auction }) {
                 onClick={handleBidButtonClick}
               />
               <ModalBody title="" isOpen={isModalOpen}>
-                <MakeBid auctionId={data.id}  />
+                <MakeBid auctionId={data.id} />
               </ModalBody>
             </Modal>
           )}
@@ -126,10 +127,10 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
   const high = useHigtestBid(auction.id);
   const user = useUser();
   const myBid = useMyBid(user ? user.id : "", auction.id);
+  const endTime = useMemo(() => auction.endDate
+    , [auction.endDate])
 
-  if (auction === null) return <> </>;
-  // const timeRemaining = useTimeRemaining(auction.endDate);
-  return (
+  return auction !== null ? (
     <>
       <Card>
         <CardHeader className="flex justify-between item-center gap-4">
@@ -137,6 +138,7 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
             <p>
               {" "}
               Temps restant <br />
+              {endTime ? <Timer endTime={endTime} /> : "Auction Completed"}
             </p>
           </div>
           <div>
@@ -150,5 +152,5 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
       </Card>
       <BidAgain bid={myBid} />
     </>
-  );
+  ) : <> </>;
 }

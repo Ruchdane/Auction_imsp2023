@@ -280,7 +280,7 @@ export function useAuctionsBidder() {
 }
 
 // Convertir le temps restant en format mm:ss:mmm
-function formatTime(timeRemaining: number): string {
+export function formatTime(timeRemaining: number): string {
   const minutes = String(Math.floor(timeRemaining / 60000)).padStart(2, "0");
   const seconds = String(Math.floor((timeRemaining % 60000) / 1000)).padStart(
     2,
@@ -290,7 +290,7 @@ function formatTime(timeRemaining: number): string {
   return `${minutes}:${seconds}:${milliseconds}`;
 }
 
-function getTimeRemaining(endDate: Date): number {
+export function getTimeRemaining(endDate: Date): number {
   const currentTime = new Date().getTime();
   const endTime = endDate.getTime();
 
