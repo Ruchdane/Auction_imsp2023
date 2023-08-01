@@ -22,13 +22,12 @@ interface AuctionCardProps {
   auction: Auction;
 }
 
-export default function AuctionCard({ data }: { data: Auction }) {
+export default function AuctionCard({ auction }: AuctionCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const high = useHigtestBid(data.id);
-  const timeRemaining = useTimeRemaining(data.endDate);
+  const high = useHigtestBid(auction.id);
   const user = useUser();
   const navigate = useNavigate();
-  useEndAuction(timeRemaining, data.id);
+  // useEndAuction(timeRemaining, auction.id);
 
   const handleBidButtonClick = () => {
     if (!user) {
@@ -41,19 +40,23 @@ export default function AuctionCard({ data }: { data: Auction }) {
   return (
     <Card>
       <CardHeader className="flex justify-between item-center gap-4">
-        <CardTitle> {data.item.name}</CardTitle>
+        <CardTitle> {auction.item.name}</CardTitle>
       </CardHeader>
       <CardContent>
         <img
-          src={data.item.imgUrl}
+          src={auction.item.imgUrl}
           style={{ width: "200px", height: "200px" }}
           className="bg-contrast"
-          alt={data.item.name}
+          alt={auction.item.name}
         />
-        <p> Temps restant : {timeRemaining}</p>
+        <p>
+            {" "}
+            Temps restant:{}
+            {auction.endDate ? <Timer endTime={auction.endDate} auction={auction}/> : "Auction Completed"}
+          </p>
         <p> Plus Offrant : {high} XOF</p>
         <div className="flex justify-between items-center pt-4">
-          {(!user || (user && user.id != data.sellerId)) && (
+          {(!user || (user && user.id != auction.sellerId)) && (
             <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
               <ModalTriger
                 label="Enchérir"
@@ -66,18 +69,18 @@ export default function AuctionCard({ data }: { data: Auction }) {
                 onClick={handleBidButtonClick}
               />
               <ModalBody title="" isOpen={isModalOpen}>
-                <MakeBid auctionId={data.id} />
+                <MakeBid auctionId={auction.id} />
               </ModalBody>
             </Modal>
           )}
           <Modal>
             <ModalTriger icon={<Eye size={24} />} label="Détail" onClick={() => setIsModalOpen(true)} />
-            <ModalBody title={`[${data.item.category}] ${data.item.name} `} isOpen={isModalOpen}>
+            <ModalBody title={`[${auction.item.category}] ${auction.item.name} `} isOpen={isModalOpen}>
               <div className="grid grid-cols-2 gap-2">
-                <img src={data.item.imgUrl} className="h-full" />
+                <img src={auction.item.imgUrl} className="h-full" />
                 <div>
-                  <p> {data.item.description} </p>
-                  <p> x{data.item.quantity}  à au moin {data.item.initial_price} XOF </p>
+                  <p> {auction.item.description} </p>
+                  <p> x{auction.item.quantity}  à au moins {auction.item.initial_price} XOF </p>
                   <p> Enchere la plus Haute: {high} XOF </p>
                   <p> Enchere la plus Haute: {high} XOF </p>
                   <p> Enchere la plus Haute: {high} XOF </p>
@@ -111,7 +114,7 @@ export function BidsCard({ auction }: AuctionCardProps) {
           <p>
             {" "}
             Temps restant <br /> {}
-            {auction.endDate ? <Timer endTime={auction.endDate} /> : "Auction Completed"}
+            {auction.endDate ? <Timer endTime={auction.endDate} auction={auction} /> : "Auction Completed"}
           </p>
         </div>
         <div>
@@ -153,7 +156,7 @@ export function AuctionBidCard({ auction }: AuctionCardProps) {
             <p>
               {" "}
               Temps restant <br />
-              {auction.endDate ? <Timer endTime={auction.endDate} /> : "Auction Completed"}
+              {auction.endDate ? <Timer endTime={auction.endDate} auction={auction}/> : "Auction Completed"}
             </p>
           </div>
           <div>

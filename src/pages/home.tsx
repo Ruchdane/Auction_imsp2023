@@ -8,7 +8,7 @@ export default function Home() {
       <h2 className="text-lg font-bold"> Auctions </h2>
       <div className="pt-8 flex flex-wrap gap-4 mx-auto">
         {auctions.map((auction, key) => (
-          <AuctionCard key={key} data={auction} />
+          <AuctionCard key={key} auction={auction} />
         ))}
       </div>
     </>

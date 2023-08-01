@@ -82,19 +82,46 @@ export const useHigtestBid = (auctionId: string): number => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [auctionId]);
 
   return high;
 };
 
-export const useEndAuction = (timeRemaining: string, auctionId: string) => {
+export const useEndAuction = (timeRemaining: string, auction: Auction) => {
   const { toast } = useToast();
+  const user = useUser();
 
   useEffect(() => {
     if (timeRemaining === "00:00:000") {
       const fetchEndAuction = async () => {
-        const response = await auctionService.endAuction({ auctionId });
-        if (response.success) {
+        const response = await auctionService.endAuction({ auctionId : auction.id });
+        if (response.success ) {
+          if (response.data && user) {
+              console.log('response.data:', response.data)
+              const res = await bidService.getBidsAuction(auction.id);
+              if (res.success) {
+                const bids = res.data;
+                if (
+                  bids.find((it) => it.bidderId === user.id) ||  auction.sellerId === user.id
+                ) {
+                  bids.sort((a, b) => b.amount - a.amount);
+                  if (bids[0].bidderId === user.id) {
+                    toast({
+                      title: "Enchère Terminé",
+                      description: `Vous avez remporté l'enchère ${auction.item.name}.`,
+                      variant: "default",
+                    });
+                  } else {
+                    toast({
+                      title: "Enchère Terminé",
+                      description: `L'enchère ${auction.item.name} a été remporté par l'utilisateur ${bids[0].bidder.name}.`,
+                      variant: "default",
+                    });
+                  }
+                
+              } 
+            }
+          }
           // toast({
           //   title: "Success",
           //   description: "Auction updated successfully",

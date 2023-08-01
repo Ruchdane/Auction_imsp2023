@@ -17,6 +17,10 @@ export default function MyAuctions() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sellerAuctions = useAuctionsSeller();
   const [sellerAuction, setsellerAuction] = useState<Auction | null>(null);
+
+  const isSellerAuctionPresent = sellerAuctions.some(
+    (auction) => auction.id === sellerAuction?.id
+  );
   return (
     <>
       <div className="flex justify-between">
@@ -39,7 +43,7 @@ export default function MyAuctions() {
             />
           </CardContent>
         </Card>
-        {sellerAuction && <BidsCard auction={sellerAuction} />}
+        { isSellerAuctionPresent && sellerAuction && <BidsCard auction={sellerAuction} />}
       </div>
     </>
   );

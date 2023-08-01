@@ -114,7 +114,7 @@ class AuctionService {
 
   async endAuction(
     dto: EndAuctionDto,
-  ): Promise<SuccessResponse<null> | ErrorResponse> {
+  ): Promise<SuccessResponse<null | Bid> | ErrorResponse> {
     try {
       const auctionRef = doc(firestoreApp, "auctions", dto.auctionId);
       const result = await this.getAuction(dto.auctionId);
@@ -145,7 +145,7 @@ class AuctionService {
               sold_price: highestBid.amount,
             });
 
-            return { success: true, data: null };
+            return { success: true, data: highestBid };
           }
         } else {
           return response;
