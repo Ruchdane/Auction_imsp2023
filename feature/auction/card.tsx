@@ -1,7 +1,7 @@
-import { ChevronDown, Plus } from "lucide-react";
+import { Eye, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { Modal, ModalBody, ModalTriger } from "../../ui/modal";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import MakeBid from "../../form/makebid";
 import {
   useAuctionHighBid,
@@ -10,12 +10,13 @@ import {
   useMyBid,
   useTimeRemaining,
 } from ".";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Auction } from "../../domain/types/auction";
 import { Bid } from "../../domain/types/bid";
 import { useUser } from "../auth";
 import BidAgain from "../../form/bidagain";
 import { Timer } from "../../ui/timer";
+import auth from "../../domain/firebase/auth";
 
 interface AuctionCardProps {
   auction: Auction;
@@ -69,10 +70,21 @@ export default function AuctionCard({ data }: { data: Auction }) {
               </ModalBody>
             </Modal>
           )}
-          <Link to="/mes_encheres/detail" className="inline-flex">
-            <ChevronDown size={24} />
-            Détails
-          </Link>
+          <Modal>
+            <ModalTriger icon={<Eye size={24} />} label="Détail" onClick={() => setIsModalOpen(true)} />
+            <ModalBody title={`[${data.item.category}] ${data.item.name} `} isOpen={isModalOpen}>
+              <div className="grid grid-cols-2 gap-2">
+                <img src={data.item.imgUrl} className="h-full" />
+                <div>
+                  <p> {data.item.description} </p>
+                  <p> x{data.item.quantity}  à au moin {data.item.initial_price} XOF </p>
+                  <p> Enchere la plus Haute: {high} XOF </p>
+                  <p> Enchere la plus Haute: {high} XOF </p>
+                  <p> Enchere la plus Haute: {high} XOF </p>
+                </div>
+              </div>
+            </ModalBody>
+          </Modal>
         </div>
       </CardContent>
     </Card>
