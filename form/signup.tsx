@@ -9,7 +9,6 @@ import { ThemeSwitcher, useColor } from "../feature/theme";
 import { Label } from "@radix-ui/react-label";
 
 function Signup() {
-  console.log("rendered")
   const { toast } = useToast();
   const [emailField, setEmailField] = useState("");
   const [nameField, setNameField] = useState("");
@@ -24,11 +23,12 @@ function Signup() {
   const disabled = useMemo(() => {
     return (
       emailField === "" ||
+      nameField === "" ||
       passwordField === "" ||
       repasswordField === "" ||
       passwordField != repasswordField
     );
-  }, [emailField, passwordField, repasswordField]);
+  }, [emailField, nameField, passwordField, repasswordField]);
 
   function validateEmail(email: string) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
