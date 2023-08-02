@@ -9,6 +9,7 @@ import { ThemeSwitcher, useColor } from "../feature/theme";
 import { Label } from "@radix-ui/react-label";
 
 function Signup() {
+  console.log("rendered")
   const { toast } = useToast();
   const [emailField, setEmailField] = useState("");
   const [nameField, setNameField] = useState("");
@@ -44,7 +45,7 @@ function Signup() {
       name: nameField,
     };
 
-    if (!validateEmail(e.target.value)) {
+    if (!validateEmail(emailField)) {
       setIsEmailValid(false);
       setTimeout(() => {
         setIsEmailValid(true);
