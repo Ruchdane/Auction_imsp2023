@@ -3,6 +3,14 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getFirestore, serverTimestamp } from "firebase/firestore";
 
+console.log('import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY',import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY);
+console.log('import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN',import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN);
+console.log('import.meta.env.VITE_REACT_APP_FIREBASE_PROJECT_ID',import.meta.env.VITE_REACT_APP_FIREBASE_PROJECT_ID);
+console.log('import.meta.env.VITE_REACT_APP_FIREBASE_STORAGE_BUCKET',import.meta.env.VITE_REACT_APP_FIREBASE_STORAGE_BUCKET);
+console.log('import.meta.env.VITE_REACT_APP_FIREBASE_MESSAGING_SENDER_ID',import.meta.env.VITE_REACT_APP_FIREBASE_MESSAGING_SENDER_ID);
+console.log('import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID',import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID);
+console.log('import.meta.env.VITE_REACT_APP_FIREBASE_MEASUREMENT_ID',import.meta.env.VITE_REACT_APP_FIREBASE_MEASUREMENT_ID);
+
 if (
   !import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY ||
   !import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN ||
