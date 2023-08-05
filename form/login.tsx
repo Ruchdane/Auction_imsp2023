@@ -3,16 +3,17 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { LoginDto } from "../domain/dto/login.dto";
+import { Label } from "@radix-ui/react-label";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import authService from "../domain/services/auth.service";
 import { ThemeSwitcher, useColor } from "../feature/theme";
 
-
 function Login() {
   const { toast } = useToast();
   const [emailField, setEmailField] = useState("");
   const [passwordField, setPasswordField] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,6 +23,11 @@ function Login() {
   const disabled = useMemo(() => {
     return emailField === "" || passwordField === "";
   }, [emailField, passwordField]);
+
+  function validateEmail(email: string) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 
   async function handleSubmit(e: any): Promise<void> {
     e.preventDefault();
@@ -34,25 +40,33 @@ function Login() {
 
     const response = await authService.login(dto);
 
-    if (response.success) {
-      toast({
-        title: "Success",
-        description: `Connexion réussie`,
-        variant: "default",
-      });
-      if (location.state && location.state.from) {
-        navigate(location.state.from);
-      } else {
-        navigate("/");
-      }
+    if (!validateEmail(emailField)) {
+      setIsEmailValid(false);
+      setTimeout(() => {
+        setIsEmailValid(true);
+      }, 3000);
+      setIsloading(false);
     } else {
-      toast({
-        title: "Error",
-        description: `${response.message}`,
-        variant: "destructive",
-      });
+      if (response.success) {
+        toast({
+          title: "Success",
+          description: `Connexion réussie`,
+          variant: "default",
+        });
+        if (location.state && location.state.from) {
+          navigate(location.state.from);
+        } else {
+          navigate("/");
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: `${response.message}`,
+          variant: "destructive",
+        });
+      }
+      setIsloading(false);
     }
-    setIsloading(false);
   }
 
   return (
@@ -67,14 +81,25 @@ function Login() {
             <h2 className="text-3xl font-bold">Se connecter</h2>
             <div className="flex flex-col items-center gap-4">
               <div className="w-full">
+                <Label>Email</Label>
+                {!isEmailValid && (
+                  <p
+                    style={{ color: "red", margin: "4px 0", fontSize: "14px" }}
+                  >
+                    Veuillez saisir une adresse email valide.
+                  </p>
+                )}
                 <Input
                   type="email"
-                  placeholder="Email"
+                  placeholder="nom_utilisateur@domaine.extension"
                   value={emailField}
-                  onChange={(e) => setEmailField(e.target.value)}
+                  onChange={(e) => {
+                    setEmailField(e.target.value);
+                  }}
                 />
               </div>
               <div className="w-full">
+                <Label>Mot de passe</Label>
                 <Input
                   type="password"
                   placeholder="Mot de passe"

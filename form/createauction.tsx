@@ -20,9 +20,7 @@ function CreateAuction() {
   }, [itemIndex]);
 
   useEffect(() => {
-    
     if (userId != "") {
-      
       const fetchStock = async () => {
         try {
           const response = await stockService.getStockUser(userId);

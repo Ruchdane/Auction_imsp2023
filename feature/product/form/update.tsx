@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, ChangeEvent, useEffect } from "react";
+import { useMemo, useState, useRef } from "react";
 import { Button } from "../../../ui/button";
 import { Label } from "../../../ui/label";
 import { Input } from "../../../ui/input";
@@ -8,12 +8,7 @@ import { UpdateItemDto } from "../../../domain/dto/updateItem.dto";
 import { Textarea } from "../../../ui/textarea";
 import itemService from "../../../domain/services/item.service";
 import { Item } from "../../../domain/types/items";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storageApp } from "../../../domain/firebase/config";
 
 interface itemObj {

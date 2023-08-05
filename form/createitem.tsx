@@ -72,7 +72,7 @@ function CreateItem() {
         const imageUrl = await getDownloadURL(storageRef);
 
         const dto: AddItemDto = {
-          stockId: user? user.stockId : "None",
+          stockId: user ? user.stockId : "None",
           name: nameField,
           initial_price: priceField,
           quantity: quantityField,

@@ -13,7 +13,7 @@ function useItemsStock(userId: string) {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (userId!="") {
+    if (userId != "") {
       const unsubscribe = stockService.listenStockUser(
         userId,
         (updatedStock, error) => {

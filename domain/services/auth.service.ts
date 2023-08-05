@@ -33,7 +33,10 @@ class AuthService {
       const existingUserSnapshot = await getDocs(existingUserQuery);
 
       if (!existingUserSnapshot.empty) {
-        return { success: false, message: "Ce nom est déjà utilisé." };
+        return {
+          success: false,
+          message: "Cet nom est déjà utilisé par un autre utilisateur.",
+        };
       }
 
       const { user } = await AuthFirebase.createUserWithEmailAndPassword(
@@ -42,9 +45,20 @@ class AuthService {
       );
       const createdUser = await this.createUserWithName(user.uid, dto);
       return { success: true, data: createdUser };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during signup:", error);
-      return { success: false, message: "Error during signup." };
+      let errorMessage =
+        "Une erreur s'est produite lors de l'inscription. Veuillez réessayer plus tard.";
+
+      if (error.code === "auth/email-already-in-use") {
+        errorMessage = "Cet email est déjà utilisé par un autre utilisateur.";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "L'adresse email fournie est invalide.";
+      } else if (error.code === "auth/weak-password") {
+        errorMessage =
+          "Le mot de passe est trop faible. Veuillez choisir un mot de passe plus fort.";
+      }
+      return { success: false, message: errorMessage };
     }
   }
 
@@ -61,9 +75,23 @@ class AuthService {
       } else {
         return response;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during login:", error);
-      return { success: false, message: "Error during login." };
+
+      let errorMessage =
+        "Une erreur s'est produite lors de la connexion. Veuillez réessayer plus tard.";
+
+      if (
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/wrong-password"
+      ) {
+        errorMessage =
+          "Identifiants incorrects. Veuillez vérifier votre email et votre mot de passe.";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "L'adresse email fournie est invalide.";
+      }
+
+      return { success: false, message: errorMessage };
     }
   }
 
@@ -73,7 +101,11 @@ class AuthService {
       return { success: true, data: null };
     } catch (error) {
       console.error("Error during logout:", error);
-      return { success: false, message: "Error during logout." };
+      return {
+        success: false,
+        message:
+          "Une erreur s'est produite lors de la déconnexion. Veuillez réessayer plus tard.",
+      };
     }
   }
 

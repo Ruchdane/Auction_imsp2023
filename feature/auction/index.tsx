@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import auctionService from "../../domain/services/auction.service";
 import { Auction } from "../../domain/types/auction";
 import { Bid } from "../../domain/types/bid";
@@ -82,19 +82,48 @@ export const useHigtestBid = (auctionId: string): number => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [auctionId]);
 
   return high;
 };
 
-export const useEndAuction = (timeRemaining: string, auctionId: string) => {
+export const useEndAuction = (timeRemaining: string, auction: Auction) => {
   const { toast } = useToast();
+  const user = useUser();
 
   useEffect(() => {
     if (timeRemaining === "00:00:000") {
       const fetchEndAuction = async () => {
-        const response = await auctionService.endAuction({ auctionId });
+        const response = await auctionService.endAuction({
+          auctionId: auction.id,
+        });
         if (response.success) {
+          if (response.data && user) {
+            console.log("response.data:", response.data);
+            const res = await bidService.getBidsAuction(auction.id);
+            if (res.success) {
+              const bids = res.data;
+              if (
+                bids.find((it) => it.bidderId === user.id) ||
+                auction.sellerId === user.id
+              ) {
+                bids.sort((a, b) => b.amount - a.amount);
+                if (bids[0].bidderId === user.id) {
+                  toast({
+                    title: "Enchère Terminé",
+                    description: `Vous avez remporté l'enchère ${auction.item.name}.`,
+                    variant: "default",
+                  });
+                } else {
+                  toast({
+                    title: "Enchère Terminé",
+                    description: `L'enchère ${auction.item.name} a été remporté par l'utilisateur ${bids[0].bidder.name}.`,
+                    variant: "default",
+                  });
+                }
+              }
+            }
+          }
           // toast({
           //   title: "Success",
           //   description: "Auction updated successfully",
@@ -151,8 +180,6 @@ export function getAllAuction() {
 export function useActiveAuctions() {
   const [activeAuctions, setActiveAuctions] = useState<Auction[]>([]);
   const { toast } = useToast();
-  const user = useUser();
-
   useEffect(() => {
     const unsubscribe = auctionService.listenActiveAuctions(
       (newActiveAuctions, error) => {
@@ -163,52 +190,6 @@ export function useActiveAuctions() {
             variant: "destructive",
           });
         } else {
-          activeAuctions.forEach(async (it) => {
-            let resultSearch = newActiveAuctions.find(
-              (auction) => auction.id === it.id,
-            );
-
-            if (resultSearch == undefined) {
-              // const auctionData = useAuction(it.id);
-              if (user) {
-                const response = await bidService.getBidsAuction(it.id);
-                if (response.success) {
-                  const bids = response.data;
-                  console.log("bids:", bids);
-                  if (
-                    bids.find((it) => it.bidderId === user.id) ||
-                    it.sellerId === user.id
-                  ) {
-                    console.log(
-                      "bids.find(it=>it.bidderId===user.id):",
-                      bids.find((it) => it.bidderId === user.id),
-                    );
-                    bids.sort((a, b) => b.amount - a.amount);
-                    if (bids[0].bidderId === user.id) {
-                      toast({
-                        title: "Enchère Terminé",
-                        description: `Vous avez remporté l'enchère ${it.item.name}.`,
-                        variant: "default",
-                      });
-                    } else {
-                      toast({
-                        title: "Enchère Terminé",
-                        description: `L'enchère ${it.item.name} a été remporté par ${bids[0].bidder.name}.`,
-                        variant: "default",
-                      });
-                    }
-                  }
-                } else {
-                  toast({
-                    title: "Error",
-                    description: response.message,
-                    variant: "destructive",
-                  });
-                }
-              }
-            }
-          });
-
           setActiveAuctions(newActiveAuctions);
         }
       },

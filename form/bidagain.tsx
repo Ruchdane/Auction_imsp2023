@@ -12,7 +12,7 @@ import {
 import { Bid } from "../domain/types/bid";
 
 interface bidAgainProps {
-  bid: Bid |null;
+  bid: Bid | null;
 }
 
 function BidAgain(props: bidAgainProps) {
@@ -31,7 +31,7 @@ function BidAgain(props: bidAgainProps) {
     setIsloading(() => true);
     try {
       const dto: BidAgainDto = {
-        bidId: props.bid? props.bid.id : "None",
+        bidId: props.bid ? props.bid.id : "None",
         amount: amountField,
       };
       const response = await bidService.bidAgain(dto);

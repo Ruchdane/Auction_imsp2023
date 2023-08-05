@@ -6,13 +6,11 @@ import {
 } from "../ui/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ThemeSwitcher } from "../feature/theme";
-import { AuthContext } from "../feature/auth/context";
-import { useContext } from "react";
 import authService from "../domain/services/auth.service";
 import { useToast } from "../ui/use-toast";
+import { useUser } from "../feature/auth";
 export function Navbar() {
-  const authContext = useContext(AuthContext);
-  const user = authContext?.user;
+  const user = useUser();
   const navigate = useNavigate();
 
   const { toast } = useToast();
@@ -48,7 +46,7 @@ export function Navbar() {
             <button onClick={handleLogout}>Se déconnecter</button>
           </NavigationItemSection>
         ) : (
-          <Link  to="/authentification">Se connecter</Link>
+          <Link to="/authentification">Se connecter</Link>
         )}
       </div>
     </Navigation>
@@ -56,8 +54,7 @@ export function Navbar() {
 }
 
 const Profile = () => {
-  const authContext = useContext(AuthContext);
-  const user = authContext?.user;
+  const user = useUser();
   if (!user) {
     // Vérifier si l'utilisateur est connecté
     return null; // Masquer l'avatar et le nom d'utilisateur si l'utilisateur n'est pas connecté

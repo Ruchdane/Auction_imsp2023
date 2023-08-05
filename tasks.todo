@@ -3,7 +3,7 @@ New Features :
     ☐ @low Implémenter le mécanisme de fermerture de l'enchère par le propriétaire lorsque aucune offre n'est faite
     ✔ @critical Charger l'image d'un item sur firebase @done (28/07/2023 23:34:50)
     ✔ @critical Implémenter le processus du choix du gagnant @done (30/07/2023 00:38:52)
-    ☐ @critical Notifier les participants d'une enchère et le propriétaire à la fin de l'enchère
+    ✔ @critical Notifier les participants d'une enchère et le propriétaire à la fin de l'enchère @done (01/08/2023 22:47:33)
     ✔ @high Changer le statut d'un item après sa vente @done (30/07/2023 00:38:45)
     ✔ @low Obliger un utilisateur à se connecter si il veut effectuer les opérations (actions offre, actions du stock ) @done (31/07/2023 12:42:12)
     ☐ @high Implémenter le mécanisme de désinscription et de déconnexion d'un utilisateur final
@@ -16,5 +16,5 @@ Fix :
     ✔ @low Vérifier tous les where("id", "in") de firebase @done (31/07/2023 12:41:56)
     ✔ @today Récupérer que les items en enchères et ceux disponible dans le stock d'un utilisateur @done (28/07/2023 22:07:18)
     ✔ @today Effectuer une vérification lorsque l'on crée une enchère pour s'assurer qu'il n'y aucune enchère existante  pour cet item @done (28/07/2023 23:16:01)
-    ☐ @low Afficher les erreurs dans la console 
+    ✔ @low Afficher les erreurs dans la console @done (01/08/2023 22:47:25)
     ✔ @high vérifier si l'enchère est fini avant de faire une offre @done (30/07/2023 00:41:40)

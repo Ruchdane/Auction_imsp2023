@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const contextValue: AuthContextType = {
-    user
+    user,
   };
 
   return (

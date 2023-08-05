@@ -26,7 +26,9 @@ function MakeBid(props: makeBidProps) {
     return amountField < 0;
   }, [amountField]);
 
-  async function handleSubmit(e: any): Promise<SuccessResponse<string> | ErrorResponse> {
+  async function handleSubmit(
+    e: any,
+  ): Promise<SuccessResponse<string> | ErrorResponse> {
     e.preventDefault();
     setIsloading(() => true);
     try {
@@ -37,7 +39,6 @@ function MakeBid(props: makeBidProps) {
       };
       const response = await bidService.makeBid(dto);
       if (response.success) {
-
         toast({
           title: "Success",
           description: `L'offre a été fait avec succès!`,
